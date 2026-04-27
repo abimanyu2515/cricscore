@@ -1,5 +1,3 @@
-import { pid } from "process";
-
 export const PLAYER_DATA = [
     {
         pid: 1,
