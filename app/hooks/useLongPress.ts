@@ -3,7 +3,7 @@ import { useCallback, useRef } from "react"
 const useLongPress = (
     onLongPress: () => void,
     onShortPress: () => void,
-    delay: number = 500
+    delay: number = 100
 ) => {
     const timeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const isLongPress = useRef(false);
