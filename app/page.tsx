@@ -22,13 +22,13 @@ const page = () => {
       <FilterRow />
       <div {...handlers} className="grid grid-cols-2 lg:grid-cols-3 mt-6 gap-4">
         {
-          PLAYER_DATA.map((player) => (
+          PLAYER_DATA.map(({ pid, playerName, role, totalRuns, totalWickets }) => (
             <PlayerCard 
-              key={player.pid}
-              playerName={player.playerName}
-              role={player.role}
-              totalRuns={player.totalRuns}
-              totalWickets={player.totalWickets}
+              key={pid}
+              playerName={playerName}
+              role={role}
+              totalRuns={totalRuns}
+              totalWickets={totalWickets}
             />
           ))
         }      
