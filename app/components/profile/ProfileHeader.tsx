@@ -3,7 +3,7 @@ import { ChevronLeft } from "lucide-react"
 
 const ProfileHeader = ({name, role, onBack}: profileHeaderProps) => {
   return (
-    <div className="py-5">
+    <div>
         <button onClick={onBack} className="flex items-center font-mono text-xs text-slate-400">
             <ChevronLeft width={14} height={14}/>
             BACK

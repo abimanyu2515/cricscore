@@ -6,7 +6,7 @@ interface LeaderBoardHeaderProps {
 
 const LeaderBoardHeader = ({ onBack }: LeaderBoardHeaderProps) => {
   return (
-    <div className="flex justify-between py-5">
+    <div className="flex justify-between">
         <button onClick={onBack} className="flex items-center font-mono text-xs text-slate-400">
             <ChevronLeft width={14} height={14}/>
             BACK
