@@ -2,7 +2,7 @@ export const PLAYER_DATA = [
     {
         pid: 1,
         playerName: "Abimanyu S",
-        role: "3D",
+        role: "ALL-ROUNDER",
         totalRuns: 1200,
         totalWickets: 50
     },

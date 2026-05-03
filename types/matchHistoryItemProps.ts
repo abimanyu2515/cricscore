@@ -1,4 +1,5 @@
 export default interface matchHistoryItemProps {
+    id?: string,
     date: string,
     matchLabel: string,
     batting?: string,

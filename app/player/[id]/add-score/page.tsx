@@ -37,7 +37,7 @@ const Page = () => {
     { label: '3S', value: triples, onChange: setTriples, type: 'number' as const },
     { label: '4S', value: fours, onChange: setFours, type: 'number' as const },
     { label: '6S', value: sixes, onChange: setSixes, type: 'number' as const },
-    { label: 'HOW OUT', value: howOut, onChange: setHowOut, type: 'select' as const, options: ['NOT OUT', 'BOWLED', 'CAUGHT', 'LBW', 'RUN OUT', 'STUMPED'] },
+    { label: 'HOW OUT', value: howOut, onChange: setHowOut, type: 'select' as const, options: ['NOT OUT', 'BOWLED', 'CAUGHT', 'RUN OUT', 'STUMPED'] },
   ]
 
   const bowlingFields = [
@@ -48,7 +48,7 @@ const Page = () => {
   ]
 
   return (
-    <div className='py-5'>
+    <div>
         <ScoreHeader playerName='Abimanyu S' onBack={() => redirect.push('/')} />
         <DateMatchRow  
           date={date}

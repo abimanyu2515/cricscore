@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${rajdhani.variable} ${shareTechMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans px-5 bg-[#0d1420] text-white">
+      <body className="min-h-full flex flex-col font-sans p-5 bg-[#0d1420] text-white">
         {children}
       </body>
     </html>
