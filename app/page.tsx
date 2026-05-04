@@ -10,6 +10,7 @@ import useLongPress from "./hooks/useLongPress"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import AdminPinDialog from "./components/AdminPinDialog"
+import AddPlayerDialog from "./components/AddPlayerDialog"
 
 const page = () => {
   const router = useRouter()
@@ -19,6 +20,25 @@ const page = () => {
   )
 
   const [showAdminDialog, setShowAdminDialog] = useState(false)
+  const [showAddPlayer, setShowAddPlayer] = useState(false)
+  const [addPlayerTrigger, setAddPlayerTrigger] = useState(false)
+
+  // When + NEW PLAYER card is tapped
+  const handleAddPlayerCard = () => {
+    setAddPlayerTrigger(true)  // remember why admin dialog was opened
+    setShowAdminDialog(true)
+  }
+
+  // When admin PIN is verified
+  const handleAdminVerified = () => {
+    setShowAdminDialog(false)
+    if (addPlayerTrigger) {
+      setShowAddPlayer(true)   // open add player dialog
+      setAddPlayerTrigger(false)
+    } else {
+      router.push('/admin')    // go to admin panel
+    }
+  }
 
   return (
     <div>
@@ -26,9 +46,14 @@ const page = () => {
       <AdminPinDialog 
         isOpen={showAdminDialog}
         onClose={() => setShowAdminDialog(false)}
-        onVerified={() => {
-          setShowAdminDialog(false)
-          router.push('/admin')
+        onVerified={handleAdminVerified}
+      />
+      <AddPlayerDialog        // ← moved outside the grid
+        isOpen={showAddPlayer}
+        onClose={() => setShowAddPlayer(false)}
+        onCreate={(name, role) => {
+          console.log(name, role)
+          setShowAddPlayer(false)
         }}
       />
       <FilterRow />
@@ -46,7 +71,7 @@ const page = () => {
             </div>
           ))
         }      
-        <AddPlayerCard />
+        <AddPlayerCard onClick={handleAddPlayerCard} />
       </div>
       <BottomNav />
     </div>
