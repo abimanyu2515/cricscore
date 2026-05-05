@@ -29,7 +29,7 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-60 px-6">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-6">
       <div className="w-full bg-zinc-900 border border-cyan-400 rounded-xl p-6">
 
         {/* Header */}
