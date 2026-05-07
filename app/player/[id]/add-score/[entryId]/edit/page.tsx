@@ -4,26 +4,30 @@ import ScoreHeader from '@/app/components/addScore/ScoreHeader'
 import StatInputCard from '@/app/components/addScore/StatInputCard'
 import ScoreAction from '@/app/components/addScore/ScoreAction'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import DateMatchRow from '@/app/components/addScore/DateMatchRow'
 
 const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
   const router = useRouter()
-  
-  // Static data for now
-  const [runs, setRuns] = useState('65')
-  const [ballsFaced, setBallsFaced] = useState('25')
+  const [loading, setLoading] = useState(true)
+  const [playerName, setPlayerName] = useState('')
+  const [date, setDate] = useState('')
+  const [matchLabel, setMatchLabel] = useState('')
+
+  const [runs, setRuns] = useState('')
+  const [ballsFaced, setBallsFaced] = useState('')
   const [singles, setSingles] = useState('')
   const [doubles, setDoubles] = useState('')
   const [triples, setTriples] = useState('')
   const [fours, setFours] = useState('')
   const [sixes, setSixes] = useState('')
   const [howOut, setHowOut] = useState('NOT OUT')
-  const [overs, setOvers] = useState('4')
-  const [runsGiven, setRunsGiven] = useState('42')
-  const [wickets, setWickets] = useState('3')
-  const [maidens, setMaidens] = useState('0')
-  const [wides, setWides] = useState('2')
-  const [noBalls, setNoBalls] = useState('0')
+  const [overs, setOvers] = useState('')
+  const [runsGiven, setRunsGiven] = useState('')
+  const [wickets, setWickets] = useState('')
+  const [maidens, setMaidens] = useState('')
+  const [wides, setWides] = useState('')
+  const [noBalls, setNoBalls] = useState('')
 
   const battingFields = [
     { label: 'RUNS', value: runs, onChange: setRuns, type: 'number' as const },
@@ -45,43 +49,139 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
     { label: 'NO-BALLS', value: noBalls, onChange: setNoBalls, type: 'number' as const },
   ]
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [playerRes, scoreRes] = await Promise.all([
+          fetch(`/api/players/${params.id}`),
+          fetch(`/api/players/${params.id}/scores/${params.entryId}`)
+        ])
+
+        const playerData = await playerRes.json()
+        const scoreData = await scoreRes.json()
+
+        setPlayerName(playerData.name)
+        setDate(scoreData.match_date)
+        setMatchLabel(scoreData.match_label)
+        setRuns(scoreData.runs?.toString() || '')
+        setBallsFaced(scoreData.balls_faced?.toString() || '')
+        setSingles(scoreData.singles?.toString() || '')
+        setDoubles(scoreData.doubles?.toString() || '')
+        setTriples(scoreData.triples?.toString() || '')
+        setFours(scoreData.fours?.toString() || '')
+        setSixes(scoreData.sixes?.toString() || '')
+        setHowOut(scoreData.how_out || 'NOT OUT')
+        setOvers(scoreData.overs_bowled?.toString() || '')
+        setRunsGiven(scoreData.runs_given?.toString() || '')
+        setWickets(scoreData.wickets?.toString() || '')
+        setMaidens(scoreData.maidens?.toString() || '')
+        setWides(scoreData.wides?.toString() || '')
+        setNoBalls(scoreData.no_balls?.toString() || '')
+      } catch (err) {
+        alert('Failed to load score data')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [params.id, params.entryId])
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`/api/players/${params.id}/scores/${params.entryId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          runs: Number(runs),
+          balls_faced: Number(ballsFaced),
+          singles: Number(singles),
+          doubles: Number(doubles),
+          triples: Number(triples),
+          fours: Number(fours),
+          sixes: Number(sixes),
+          how_out: howOut,
+          not_out: howOut === 'NOT OUT',
+          overs_bowled: Number(overs),
+          runs_given: Number(runsGiven),
+          wickets: Number(wickets),
+          maidens: Number(maidens),
+          wides: Number(wides),
+          no_balls: Number(noBalls),
+        })
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        alert(data.error || 'Failed to update score')
+        return
+      }
+
+      alert('Score updated successfully')
+      router.back()
+    } catch (error) {
+      alert('An error occurred while updating the score')
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this entry?')) return
+
+    try {
+      const res = await fetch(`/api/players/${params.id}/scores/${params.entryId}`, {
+        method: 'DELETE',
+      })
+
+      if (!res.ok) {
+        alert('Failed to delete score')
+        return
+      }
+
+      alert('Score deleted successfully')
+      router.back()
+    } catch (error) {
+      alert('An error occurred while deleting the score')
+    }
+  }
+
+  if (loading) return <div className="text-white text-center py-10">Loading...</div>
+
   return (
     <div>
-      <ScoreHeader playerName='Sam Curran' onBack={() => router.back()} />
+      <ScoreHeader playerName={playerName} onBack={() => router.back()} />
       
-      {/* Match Info Display */}
-      <div className="flex items-center font-mono gap-5 mt-4 px-0 py-2">
-        <div className="flex items-center gap-2 border border-zinc-700 px-3 py-1 rounded-md">
-          <span className="w-2 h-2 rounded-full bg-green-500" />
-          <span className="text-sm text-slate-200">2025.03.28</span>
-        </div>
-        <div className="text-cyan-400 font-medium text-sm">
-          VS METEORS
-        </div>
-      </div>
+      <DateMatchRow  
+        date={date}
+        onDateChange={setDate}
+        matchLabel={matchLabel}
+        onMatchLabelChange={setMatchLabel}
+      />
 
-      {/* Editing Previous Entry Label */}
       <div className="flex items-center gap-2 mt-4 mb-4">
         <span className="font-mono text-xs text-yellow-500 uppercase tracking-widest">// EDITING PREVIOUS ENTRY</span>
       </div>
 
-      {/* Batting Section */}
       <StatInputCard 
         title='BATTING'
         accentColor='cyan'
         fields={battingFields}
       />
 
-      {/* Bowling Section */}
       <StatInputCard 
         title='BOWLING'
         accentColor='purple'
         fields={bowlingFields}
       />
 
-      {/* Action Buttons */}
-      <div className="mt-8">
-        <ScoreAction onCancel={() => router.back()} />
+      <div className="mt-8 flex gap-3">
+        <ScoreAction onCancel={() => router.back()} onSave={handleSave} />
+        <button
+          onClick={handleDelete}
+          className="w-full font-mono text-sm text-red-400 border border-red-400 rounded-md py-3 hover:bg-red-400 hover:text-black transition-colors"
+        >
+          DELETE
+        </button>
       </div>
     </div>
   )
