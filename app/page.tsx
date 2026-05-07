@@ -3,21 +3,25 @@
 import AddPlayerCard from "./components/AddPlayerCard"
 import BottomNav from "./components/BottomNav"
 import FilterRow from "./components/FilterRow"
-import PlayerCard from "./components/PlayerCard"
 import TopNav from "./components/TopNav"
-import { PLAYER_DATA } from "./lib/constants"
-import useLongPress from "./hooks/useLongPress"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import AddPlayerDialog from "./components/AddPlayerDialog"
 import AdminPinDialog from "./components/AdminPinDialog"
+import PlayerCardWrapper from "./components/PlayerCardWrapper"
 
 const page = () => {
   const router = useRouter()
-  const handlers = useLongPress(
-    () => router.push('/player/1/profile'),
-    () => router.push('/player/1/add-score')
-  )
+
+  const [players, setPlayers] = useState<Array<{
+    id: string
+    name: string
+    role: string
+    computed_stats: {
+      total_runs: number
+      total_wickets: number
+    } | null
+  }>>([])
 
   const [showAdminDialog, setShowAdminDialog] = useState(false)
   const [showAddPlayer, setShowAddPlayer] = useState(false)
@@ -26,6 +30,16 @@ const page = () => {
   const handleAddPlayerCard = () => {
     setShowAddPlayer(true)
   }
+
+  // Fetching player data from supabase
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const res = await fetch('/api/players')
+      const data = await res.json()
+      setPlayers(data)
+    }
+    fetchPlayers()
+  }, [])
 
   return (
     <div>
@@ -41,26 +55,26 @@ const page = () => {
       <AddPlayerDialog        // ← moved outside the grid
         isOpen={showAddPlayer}
         onClose={() => setShowAddPlayer(false)}
-        onCreate={(name, role) => {
-          console.log(name, role)
+        onCreate={async () => {
           setShowAddPlayer(false)
+          const res = await fetch('/api/players')
+          const data = await res.json()
+          setPlayers(data)
         }}
       />
       <FilterRow />
       <div className="grid grid-cols-2 lg:grid-cols-3 mt-6 gap-4">
         {
-          PLAYER_DATA.map(({ pid, playerName, role, totalRuns, totalWickets }) => (
-            <div {...handlers} key={pid}>
-              <PlayerCard
-                pid={pid}
-                playerName={playerName}
-                role={role}
-                totalRuns={totalRuns}
-                totalWickets={totalWickets}
-              />
-            </div>
+          players.map(({ id, name, role, computed_stats }) => (
+            <PlayerCardWrapper
+              key={id}
+              id={id}
+              name={name}
+              role={role}
+              computed_stats={computed_stats}
+            />
           ))
-        }      
+        }
         <AddPlayerCard onClick={handleAddPlayerCard} />
       </div>
       <BottomNav />

@@ -4,8 +4,8 @@ import DateMatchRow from '@/app/components/addScore/DateMatchRow'
 import ScoreAction from '@/app/components/addScore/ScoreAction'
 import ScoreHeader from '@/app/components/addScore/ScoreHeader'
 import StatInputCard from '@/app/components/addScore/StatInputCard'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react'
 
 const today = new Date()
 const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
@@ -13,6 +13,9 @@ const todayString = localToday.toISOString().slice(0, 10)
 
 const Page = () => {
   const redirect = useRouter()
+  const params =useParams()
+  const playerId = params.id as string
+  const [playerName, setPlayerName] = useState('')
 
   const [date, setDate] = useState(todayString)
   const [matchLabel, setMatchLabel] = useState('')
@@ -47,9 +50,70 @@ const Page = () => {
     { label: 'MAIDENS', value: maidens, onChange: setMaidens, type: 'number' as const },
   ]
 
+  useEffect(() => {
+    const fetchPlayer = async () => {
+      const res = await fetch(`/api/players/${playerId}`)
+      const data = await res.json()
+      setPlayerName(data.name)
+    }
+    fetchPlayer()
+  }, [playerId])
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`/api/players/${playerId}/scores`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          match_date: date,
+          match_label: matchLabel,
+          runs: Number(runs),
+          balls_faced: Number(ballsFaced),
+          singles: Number(singles),
+          doubles: Number(doubles),
+          triples: Number(triples),
+          fours: Number(fours),
+          sixes: Number(sixes),
+          how_out: howOut,
+          not_out: howOut === 'NOT OUT',
+          overs_bowled: Number(overs),
+          runs_given: Number(runsGiven),
+          wickets: Number(wickets),
+          maidens: Number(maidens),
+        })
+      })
+
+      const data =  await res.json()
+
+      if (!res.ok) {
+        alert(data.error || 'Failed to save score')
+        return
+      }
+
+      setRuns('')
+      setBallsFaced('')
+      setSingles('')
+      setDoubles('')
+      setTriples('')
+      setFours('')
+      setSixes('')
+      setHowOut('NOT OUT')
+      setOvers('')
+      setRunsGiven('')
+      setWickets('')
+      setMaidens('')
+      setMatchLabel('')
+      setDate(todayString)
+
+      alert('Score saved successfully')
+    } catch (error) {
+      alert('An error occurred while saving the score')
+    }
+  }
+
   return (
     <div>
-        <ScoreHeader playerName='Abimanyu S' onBack={() => redirect.push('/')} />
+        <ScoreHeader playerName={playerName} onBack={() => redirect.push('/')} />
         <DateMatchRow  
           date={date}
           onDateChange={setDate}
@@ -66,7 +130,7 @@ const Page = () => {
           accentColor='purple'
           fields={bowlingFields}
         />
-        <ScoreAction onCancel={() => redirect.push('/')} />
+        <ScoreAction onCancel={() => redirect.push('/')} onSave={handleSave} />
     </div>
   )
 }

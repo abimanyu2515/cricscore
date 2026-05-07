@@ -1,4 +1,3 @@
-import { PLAYER_DATA } from "@/app/lib/constants"
 import AdminPlayerItem from "./AdminPlayerItem"
 
 interface AdminPlayerListProps {
@@ -12,10 +11,10 @@ interface AdminPlayerListProps {
 const AdminPlayerList = ({ players }: AdminPlayerListProps) => {
   return (
     <div className="flex flex-col gap-3">
-        {PLAYER_DATA?.map(({ pid, playerName, role }) => (
+        {players?.map(({ id, playerName, role }) => (
             <AdminPlayerItem 
-                key={pid}
-                playerName={playerName.toUpperCase()}
+                key={id}
+                playerName={playerName}
                 role={role}
                 onEdit={() => {}}
                 onDelete={() => {}}

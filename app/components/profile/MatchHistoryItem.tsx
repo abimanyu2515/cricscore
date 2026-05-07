@@ -5,7 +5,7 @@ const MatchHistoryItem = ({ date, matchLabel, batting, bowling, onEdit }: matchH
         <div className="border border-zinc-700 px-4 py-3 rounded-lg">
             <div className="flex justify-between font-mono text-xs text-slate-500">
                 <span>{date}</span>
-                <button onClick={onEdit} className="border border-zinc-700 text-[12px] p-0.5 rounded hover:border-cyan-300 hover:text-cyan-300">// EDIT</button>
+                {/* <button onClick={onEdit} className="border border-zinc-700 text-[12px] p-0.5 rounded hover:border-cyan-300 hover:text-cyan-300">// EDIT</button> */}
             </div>
 
             <h1 className="text-base font-bold text-white">{matchLabel}</h1>

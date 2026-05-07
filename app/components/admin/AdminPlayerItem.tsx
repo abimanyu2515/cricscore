@@ -17,7 +17,7 @@ const AdminPlayerItem = ({ playerName, role, onDelete }: AdminPlayerItemProps) =
         {!isEditing ? (
             <>
               <div>
-                <h1 className="text-2xl font-bold">{playerName}</h1>
+                <h1 className="text-2xl font-bold">{playerName.toUpperCase()}</h1>
                 <p className="text-sm font-mono text-slate-400">{role}</p>
             </div>
 

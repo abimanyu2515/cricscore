@@ -15,11 +15,29 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
 
   if (!isOpen) return null
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!name.trim()) return // name is required
-    onCreate(name.trim(), role)
-    setName('')
-    setRole('Batsman')
+
+    try {
+      const res = await fetch('api/players', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name: name.trim(), role })
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create player')
+      }
+
+      onCreate(data.name, data.role)
+      setName('')
+      setRole('Batsman')
+    } catch (err) {
+        console.error('Error creating player:', err)
+        alert(err instanceof Error ? err.message : 'An unexpected error occurred')
+    }
   }
 
   const handleClose = () => {
@@ -66,7 +84,7 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
         >
           <option value="Batsman">Batsman</option>
           <option value="Bowler">Bowler</option>
-          <option value="All-Rounder">All-Rounder</option>
+          <option value="All-rounder">All-Rounder</option>
         </select>
 
         {/* Create button */}
