@@ -10,6 +10,7 @@ import useLongPress from "./hooks/useLongPress"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import AddPlayerDialog from "./components/AddPlayerDialog"
+import AdminPinDialog from "./components/AdminPinDialog"
 
 const page = () => {
   const router = useRouter()
@@ -29,6 +30,14 @@ const page = () => {
   return (
     <div>
       <TopNav setShowAdminDialog={setShowAdminDialog} />
+      <AdminPinDialog
+        isOpen={showAdminDialog}
+        onClose={() => setShowAdminDialog(false)}
+        onVerified={() => {
+          setShowAdminDialog(false)
+          router.push('/admin')
+        }}
+      />
       <AddPlayerDialog        // ← moved outside the grid
         isOpen={showAddPlayer}
         onClose={() => setShowAddPlayer(false)}

@@ -9,8 +9,6 @@ type AdminPinDialogProps = {
   onVerified: () => void
 }
 
-const CORRECT_PIN = "1234" // temporary — will come from DB later
-
 const AdminPinDialog = ({ isOpen, onClose, onVerified }: AdminPinDialogProps) => {
   const [pin, setPin] = useState(['', '', '', ''])
   const [shaking, setShaking] = useState(false)
@@ -38,9 +36,16 @@ const AdminPinDialog = ({ isOpen, onClose, onVerified }: AdminPinDialogProps) =>
     }
   }
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const enteredPin = pin.join('')
-    if (enteredPin === CORRECT_PIN) {
+    
+    const res = await fetch('/api/auth/verify-admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: enteredPin })
+    })
+
+    if (res.ok) {
       setPin(['', '', '', ''])
       setError(false)
       onVerified()
@@ -49,7 +54,7 @@ const AdminPinDialog = ({ isOpen, onClose, onVerified }: AdminPinDialogProps) =>
       setShaking(true)
       setPin(['', '', '', ''])
       inputRefs.current[0]?.focus()
-      setTimeout(() => setShaking(false), 400) // reset shake after animation
+      setTimeout(() => setShaking(false), 400)
     }
   }
 
