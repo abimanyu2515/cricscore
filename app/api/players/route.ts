@@ -1,11 +1,22 @@
 import { supabase, supabaseAdmin } from "@/app/lib/supabase";
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export async function GET() {
     const { data, error } = await supabase
         .from('players')
-        .select('id, name, role, computed_stats(total_runs, total_wickets)')
+        .select(`
+            id,
+            name,
+            role,
+            computed_stats(
+                total_runs,
+                total_wickets,
+                batting_avg,
+                strike_rate,
+                economy,
+                best_figures
+            )
+        `)
         .order('created_at', { ascending: true })
 
     if (error) {
