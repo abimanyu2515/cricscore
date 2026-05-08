@@ -3,11 +3,13 @@
 import ScoreHeader from '@/app/components/addScore/ScoreHeader'
 import StatInputCard from '@/app/components/addScore/StatInputCard'
 import ScoreAction from '@/app/components/addScore/ScoreAction'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import DateMatchRow from '@/app/components/addScore/DateMatchRow'
 
-const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
+const EditPage = () => {
+  const params = useParams()
+  const playerId = params.id as string
+  const entryId = params.entryId as string
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [playerName, setPlayerName] = useState('')
@@ -26,8 +28,6 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
   const [runsGiven, setRunsGiven] = useState('')
   const [wickets, setWickets] = useState('')
   const [maidens, setMaidens] = useState('')
-  const [wides, setWides] = useState('')
-  const [noBalls, setNoBalls] = useState('')
 
   const battingFields = [
     { label: 'RUNS', value: runs, onChange: setRuns, type: 'number' as const },
@@ -45,16 +45,14 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
     { label: 'RUNS GIVEN', value: runsGiven, onChange: setRunsGiven, type: 'number' as const },
     { label: 'WICKETS', value: wickets, onChange: setWickets, type: 'number' as const },
     { label: 'MAIDENS', value: maidens, onChange: setMaidens, type: 'number' as const },
-    { label: 'WIDES', value: wides, onChange: setWides, type: 'number' as const },
-    { label: 'NO-BALLS', value: noBalls, onChange: setNoBalls, type: 'number' as const },
   ]
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [playerRes, scoreRes] = await Promise.all([
-          fetch(`/api/players/${params.id}`),
-          fetch(`/api/players/${params.id}/scores/${params.entryId}`)
+          fetch(`/api/players/${playerId}`),
+          fetch(`/api/players/${playerId}/scores/${entryId}`)
         ])
 
         const playerData = await playerRes.json()
@@ -75,8 +73,6 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
         setRunsGiven(scoreData.runs_given?.toString() || '')
         setWickets(scoreData.wickets?.toString() || '')
         setMaidens(scoreData.maidens?.toString() || '')
-        setWides(scoreData.wides?.toString() || '')
-        setNoBalls(scoreData.no_balls?.toString() || '')
       } catch (err) {
         alert('Failed to load score data')
       } finally {
@@ -85,11 +81,11 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
     }
 
     fetchData()
-  }, [params.id, params.entryId])
+  }, [playerId, entryId])
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`/api/players/${params.id}/scores/${params.entryId}`, {
+      const res = await fetch(`/api/players/${playerId}/scores/${entryId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -106,8 +102,6 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
           runs_given: Number(runsGiven),
           wickets: Number(wickets),
           maidens: Number(maidens),
-          wides: Number(wides),
-          no_balls: Number(noBalls),
         })
       })
 
@@ -125,38 +119,18 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
     }
   }
 
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this entry?')) return
-
-    try {
-      const res = await fetch(`/api/players/${params.id}/scores/${params.entryId}`, {
-        method: 'DELETE',
-      })
-
-      if (!res.ok) {
-        alert('Failed to delete score')
-        return
-      }
-
-      alert('Score deleted successfully')
-      router.back()
-    } catch (error) {
-      alert('An error occurred while deleting the score')
-    }
-  }
-
   if (loading) return <div className="text-white text-center py-10">Loading...</div>
 
   return (
     <div>
       <ScoreHeader playerName={playerName} onBack={() => router.back()} />
       
-      <DateMatchRow  
-        date={date}
-        onDateChange={setDate}
-        matchLabel={matchLabel}
-        onMatchLabelChange={setMatchLabel}
-      />
+      <div className="flex items-center gap-3 mt-4 font-mono text-xs">
+        <span className="border border-zinc-700 px-3 py-1 rounded-md text-cyan-400">
+          {date}
+        </span>
+        <span className="text-zinc-500">{matchLabel}</span>
+      </div>
 
       <div className="flex items-center gap-2 mt-4 mb-4">
         <span className="font-mono text-xs text-yellow-500 uppercase tracking-widest">// EDITING PREVIOUS ENTRY</span>
@@ -174,15 +148,10 @@ const EditPage = ({ params }: { params: { id: string; entryId: string } }) => {
         fields={bowlingFields}
       />
 
-      <div className="mt-8 flex gap-3">
-        <ScoreAction onCancel={() => router.back()} onSave={handleSave} />
-        <button
-          onClick={handleDelete}
-          className="w-full font-mono text-sm text-red-400 border border-red-400 rounded-md py-3 hover:bg-red-400 hover:text-black transition-colors"
-        >
-          DELETE
-        </button>
-      </div>
+      <ScoreAction
+        onSave={handleSave}
+        onCancel={() => router.back()}
+      />
     </div>
   )
 }

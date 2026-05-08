@@ -2,18 +2,20 @@ import { Pencil, Trash2 } from "lucide-react"
 import { useState } from "react"
 
 interface AdminPlayerItemProps {
+    id: string,
     playerName: string,
     role: string,
+    onUpdate: (newName: string, newRole: string) => void,
     onDelete: () => void,
 }
 
-const AdminPlayerItem = ({ playerName, role, onDelete }: AdminPlayerItemProps) => {
+const AdminPlayerItem = ({ id, playerName, role, onUpdate, onDelete }: AdminPlayerItemProps) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editedName, setEditedName] = useState(playerName)
   const [editedRole, setEditedRole] = useState(role)
 
   return (
-    <div className="flex justify-between items-center border p-3 bg-[#111c2e] border-slate-600 rounded-lg">
+    <div data-player-id={id} className="flex justify-between items-center border p-3 bg-[#111c2e] border-slate-600 rounded-lg">
         {!isEditing ? (
             <>
               <div>
@@ -57,7 +59,13 @@ const AdminPlayerItem = ({ playerName, role, onDelete }: AdminPlayerItemProps) =
                         <button onClick={() => setIsEditing(false)} className="w-full border border-zinc-700 p-1.5 rounded hover:border-slate-500 text-slate-500 hover:text-cyan-400 active:border-cyan-500 active:text-cyan-500">
                             CANCEL
                         </button>
-                        <button className="w-full bg-cyan-500 text-[#111c2e] font-semibold p-1.5 rounded">
+                        <button
+                            onClick={() => {
+                                onUpdate(editedName, editedRole)
+                                setIsEditing(false)
+                            }}
+                            className="w-full bg-cyan-500 text-[#111c2e] font-semibold p-1.5 rounded"
+                        >
                             UPDATE
                         </button>
                     </div>

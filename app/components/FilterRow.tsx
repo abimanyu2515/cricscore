@@ -1,27 +1,31 @@
 'use client'
 
-import { useState } from "react";
+type FilterRowProps = {
+  activeFilter: string
+  onFilterChange: (filter: string) => void
+}
 
-const FilterRow = () => {
-  const [isActive, setIsActive] = useState("ALL");
-  const roles = ["ALL", "BAT", "BOWL", "3D"];
+const FilterRow = ({ activeFilter, onFilterChange }: FilterRowProps) => {
 
   return (
-    <div className="flex justify-between items-center mt-4">
-        <span className="text-sm text-slate-500 font-mono">// PLAYERS</span>
-
-        <div className="flex text-sm text-slate-500 font-mono gap-2">
-            {
-              roles.map((role) => (
-                <button
-                  key={role}
-                  onClick={() => setIsActive(role)}
-                  className={`border hover:border-cyan-400 hover:text-cyan-400 hover:cursor-pointer ${isActive == role ? "border-cyan-400 text-cyan-400" : "border-zinc-700"} rounded-md text-xs px-3 py-1`}
-                >
-                  {role}
-                </button>
-              ))
-            }
+    <div className="flex items-center justify-between mt-4">
+        <span className="font-mono text-xs text-zinc-500 tracking-widest">
+            {'// ACTIVE PLAYERS'}
+        </span>
+        <div className="flex gap-2">
+            {['ALL', 'BAT', 'BOWL', '3D'].map((filter) => (
+              <button
+                key={filter}
+                onClick={() => onFilterChange(filter)}
+                className={`font-mono text-xs px-3 py-1 border rounded ${
+                  activeFilter === filter
+                    ? 'border-cyan-400 text-cyan-400'
+                    : 'border-zinc-700 text-zinc-500'
+                }`}
+              >
+                {filter}
+              </button>
+            ))}
         </div>        
     </div>
   )

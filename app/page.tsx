@@ -10,7 +10,7 @@ import AddPlayerDialog from "./components/AddPlayerDialog"
 import AdminPinDialog from "./components/AdminPinDialog"
 import PlayerCardWrapper from "./components/PlayerCardWrapper"
 
-const page = () => {
+const Page = () => {
   const router = useRouter()
 
   const [players, setPlayers] = useState<Array<{
@@ -25,6 +25,15 @@ const page = () => {
 
   const [showAdminDialog, setShowAdminDialog] = useState(false)
   const [showAddPlayer, setShowAddPlayer] = useState(false)
+  const [activeFilter, setActiveFilter] = useState('ALL')
+
+  const filteredPlayers = players.filter((p) => {
+    if (activeFilter === 'ALL') return true
+    if (activeFilter === 'BAT') return p.role === 'Batsman'
+    if (activeFilter === 'BOWL') return p.role === 'Bowler'
+    if (activeFilter === '3D') return p.role === 'All-rounder'
+    return true
+  })
 
   // When + NEW PLAYER card is tapped
   const handleAddPlayerCard = () => {
@@ -52,7 +61,7 @@ const page = () => {
           router.push('/admin')
         }}
       />
-      <AddPlayerDialog        // ← moved outside the grid
+      <AddPlayerDialog
         isOpen={showAddPlayer}
         onClose={() => setShowAddPlayer(false)}
         onCreate={async () => {
@@ -62,10 +71,13 @@ const page = () => {
           setPlayers(data)
         }}
       />
-      <FilterRow />
+      <FilterRow
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+      />
       <div className="grid grid-cols-2 lg:grid-cols-3 mt-6 gap-4">
         {
-          players.map(({ id, name, role, computed_stats }) => (
+          filteredPlayers.map(({ id, name, role, computed_stats }) => (
             <PlayerCardWrapper
               key={id}
               id={id}
@@ -82,4 +94,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

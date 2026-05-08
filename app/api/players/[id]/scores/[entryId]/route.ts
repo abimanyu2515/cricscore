@@ -1,6 +1,25 @@
-import { supabaseAdmin } from "@/app/lib/supabase";
-import { error } from "next/dist/build/output/log";
+import { supabase, supabaseAdmin } from "@/app/lib/supabase";
 import { NextResponse } from "next/server";
+
+export async function GET(
+    request: Request,
+    { params }: { params: Promise<{ id: string; entryId: string }> }
+) {
+    const { id, entryId } = await params
+
+    const { data, error } = await supabase
+        .from('score_entries')
+        .select('*')
+        .eq('id', entryId)
+        .eq('player_id', id)
+        .single()
+
+    if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json(data)
+}
 
 export async function PATCH(
     request: Request,
