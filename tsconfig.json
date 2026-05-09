@@ -30,6 +30,6 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "types/**/*.ts"
-  ],
+,     "next.config.js"  ],
   "exclude": ["node_modules"]
 }

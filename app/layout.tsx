@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     shortcut: "/logo.png",
     apple: "/logo.png",
   },
+  manifest: '/manifest.json',
+  themeColor: '#00e5ff',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'CricScore',
+  },
 };
 
 export default function RootLayout({

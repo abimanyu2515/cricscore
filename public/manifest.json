@@ -1,0 +1,22 @@
+{
+  "name": "CricScore",
+  "short_name": "CricScore",
+  "description": "Cricket Score Tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080c12",
+  "theme_color": "#00e5ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
