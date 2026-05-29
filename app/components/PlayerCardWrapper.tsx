@@ -20,7 +20,7 @@ const PlayerCardWrapper = ({ id, name, role, computed_stats }: PlayerCardWrapper
   )
 
   return (
-    <div {...handlers}>
+    <div {...handlers} style={{ touchAction: 'manipulation' }}>
       <PlayerCard
         playerName={name}
         role={role}
