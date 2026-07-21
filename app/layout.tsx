@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Rajdhani, Share_Tech_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const rajdhani = Rajdhani({
@@ -51,6 +52,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans p-5 bg-[#0d1420] text-white">
         {children}
+        <Analytics />
         <script dangerouslySetInnerHTML={{
           __html: `
             if ('serviceWorker' in navigator) {
