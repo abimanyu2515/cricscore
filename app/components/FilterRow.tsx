@@ -10,10 +10,10 @@ const FilterRow = ({ activeFilter, onFilterChange }: FilterRowProps) => {
   return (
     <div className="flex items-center justify-between mt-4">
         <span className="font-mono text-xs text-zinc-500 tracking-widest">
-            {'// ACTIVE PLAYERS'}
+            {'// PLAYERS'}
         </span>
         <div className="flex gap-2">
-            {['ALL', 'BAT', 'BOWL', '3D'].map((filter) => (
+            {['ALL', 'BAT', 'BOWL', 'ALL-ROUNDER'].map((filter) => (
               <button
                 key={filter}
                 onClick={() => onFilterChange(filter)}

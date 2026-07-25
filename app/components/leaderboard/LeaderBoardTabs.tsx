@@ -20,8 +20,14 @@ const LeaderBoardTabs = ({ activeTab = 'BATTING', onTabChange }: LeaderBoardTabs
                 BOWLING
             </button>
         </div>
-        <div className="flex">
-            <div className={`h-1 transition-all ${activeTab === "BATTING" ? "w-1/2 bg-cyan-300" : "w-1/2 ml-auto bg-purple-300"}`}></div>
+        <div className="relative h-1">
+            <div
+                className={`absolute left-0 top-0 h-full w-1/2 transition-transform duration-300 ease-in-out ${
+                    activeTab === "BATTING"
+                        ? "translate-x-0 bg-cyan-300"
+                        : "translate-x-full bg-purple-500"
+                }`}
+            ></div>
         </div>
     </div>
   )

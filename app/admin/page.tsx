@@ -15,21 +15,30 @@ const Page = () => {
     role: string
   }>>([])
   const [showAddPlayer, setShowAddPlayer] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const refreshPlayers = async () => {
+    setLoading(true)
     const res = await fetch('/api/players')
     const data = await res.json()
     setPlayers(data)
+    setLoading(false)
   }
 
   useEffect(() => {
     const fetchPlayers = async () => {
+      setLoading(true)
       const res = await fetch('/api/players')
       const data = await res.json()
       setPlayers(data)
+      setLoading(false)
     }
     fetchPlayers()
   }, [])
+
+  if (loading) return (
+    <p className="font-mono text-xs text-zinc-500 p-4">// LOADING...</p>
+  )
 
   return (
     <div>

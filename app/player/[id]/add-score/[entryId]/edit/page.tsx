@@ -119,7 +119,9 @@ const EditPage = () => {
     }
   }
 
-  if (loading) return <div className="text-white text-center py-10">Loading...</div>
+  if (loading) return (
+    <p className="font-mono text-xs text-zinc-500 p-4">// LOADING EDIT SCORE...</p>
+  )
 
   return (
     <div>
@@ -129,11 +131,11 @@ const EditPage = () => {
         <span className="border border-zinc-700 px-3 py-1 rounded-md text-cyan-400">
           {date}
         </span>
-        <span className="text-zinc-500">{matchLabel}</span>
+        <span className="text-cyan-400 text-[15px]">{matchLabel}</span>
       </div>
 
       <div className="flex items-center gap-2 mt-4 mb-4">
-        <span className="font-mono text-xs text-yellow-500 uppercase tracking-widest">// EDITING PREVIOUS ENTRY</span>
+        <span className="font-mono text-xs text-red-500 uppercase tracking-widest">// EDITING PREVIOUS ENTRY</span>
       </div>
 
       <StatInputCard 

@@ -1,6 +1,8 @@
 import { Pencil, Trash2 } from "lucide-react"
 import { useState } from "react"
 
+const ROLE_OPTIONS = ['Batsman', 'Bowler', 'All-rounder'] as const
+
 interface AdminPlayerItemProps {
     id: string,
     playerName: string,
@@ -43,17 +45,23 @@ const AdminPlayerItem = ({ id, playerName, role, onUpdate, onDelete }: AdminPlay
                             value={editedName}
                             onChange={(e) => setEditedName(e.target.value)}
                         />
-                        <select
-                            value={editedRole}
-                            onChange={(e) => setEditedRole(e.target.value)}
-                            className={`bg-transparent font-mono text-sm text-cyan-400 border p-2 border-zinc-700 rounded focus:border-cyan-400`}
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                        {ROLE_OPTIONS.map((option) => (
+                            <button
+                                key={option}
+                                type="button"
+                                onClick={() => setEditedRole(option)}
+                                aria-pressed={editedRole === option}
+                                className={`rounded border px-2 py-1.5 text-center font-mono text-xs transition-colors ${
+                                    editedRole === option
+                                        ? 'border-cyan-400 bg-cyan-400/10 text-cyan-300'
+                                        : 'border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200'
+                                }`}
                             >
-                            {(['Batsman', 'Bowler', 'All-rounder']).map((option) => (
-                                <option key={option} value={option} className="bg-zinc-900">
-                                    {option.toUpperCase()}
-                                </option>
-                            ))}
-                        </select>
+                                {option.toUpperCase()}
+                            </button>
+                        ))}
                     </div>
                     <div className="flex gap-2 font-mono text-sm">
                         <button onClick={() => setIsEditing(false)} className="w-full border border-zinc-700 p-1.5 rounded hover:border-slate-500 text-slate-500 hover:text-cyan-400 active:border-cyan-500 active:text-cyan-500">
