@@ -12,7 +12,7 @@ const LeaderBoardHeader = ({ onBack }: LeaderBoardHeaderProps) => {
             BACK
         </button>
 
-        <h1 className="text-lg text-cyan-300 font-mono">// LEADERBOARD</h1>
+        <h1 className="text-sm text-cyan-300 font-mono">// OVERALL STATS</h1>
     </div>
   )
 }

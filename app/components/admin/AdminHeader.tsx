@@ -10,7 +10,7 @@ const AdminHeader = ({ onExit }: AdminHeaderProps) => {
 
   return (
     <div className="flex justify-between items-center font-mono">
-        <button onClick={onExit} className="flex items-center text-sm text-slate-500">
+        <button onClick={onExit} className="flex items-center text-sm text-slate-500 hover:cursor-pointer">
             <ChevronLeft width={16} />
             <span>EXIT ADMIN</span>
         </button>

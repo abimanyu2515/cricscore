@@ -5,6 +5,13 @@ export default interface statsGridProps {
     hs: number,
     wkts: number,
     eco: number,
+    innings: number,
+    bf: number,
+    fours: number,
+    sixes: number,
+    nos: number,
+    threeWi: number,
     bbm: string,
     games: number,
+    bowlInnings: number,
 }

@@ -26,12 +26,13 @@ const Page = () => {
   const [showAdminDialog, setShowAdminDialog] = useState(false)
   const [showAddPlayer, setShowAddPlayer] = useState(false)
   const [activeFilter, setActiveFilter] = useState('ALL')
+  const [loading, setLoading] = useState(true)
 
   const filteredPlayers = players.filter((p) => {
     if (activeFilter === 'ALL') return true
     if (activeFilter === 'BAT') return p.role === 'Batsman'
     if (activeFilter === 'BOWL') return p.role === 'Bowler'
-    if (activeFilter === '3D') return p.role === 'All-rounder'
+    if (activeFilter === 'ALL-ROUNDER') return p.role === 'All-rounder'
     return true
   })
 
@@ -48,7 +49,12 @@ const Page = () => {
       setPlayers(data)
     }
     fetchPlayers()
+    setLoading(false)
   }, [])
+
+  if (loading) return (
+    <p className="font-mono text-xs text-zinc-500 p-4">// LOADING PLAYERS...</p>
+  )
 
   return (
     <div>
