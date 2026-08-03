@@ -37,16 +37,16 @@ const AdminPlayerItem = ({ id, playerName, role, onUpdate, onDelete }: AdminPlay
             </>
         ) : (
             <>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col w-full gap-2">
                     <div className="flex items-center justify-between gap-2">
                         <input
                             type="text"
-                            className="text-xl w-50 p-1 bg-transparent font-bold border border-slate-600 focus:border-cyan-400 focus:outline-none rounded"
+                            className="text-xl w-full p-1 bg-transparent font-bold border border-slate-600 focus:border-cyan-400 focus:outline-none rounded"
                             value={editedName}
                             onChange={(e) => setEditedName(e.target.value)}
                         />
                     </div>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 w-full gap-2">
                         {ROLE_OPTIONS.map((option) => (
                             <button
                                 key={option}

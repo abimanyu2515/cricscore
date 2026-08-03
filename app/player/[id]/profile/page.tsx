@@ -43,7 +43,6 @@ const page = () => {
       const hasBowled = score.overs_bowled > 0 || runsGiven > 0
       if (hasBowled) {
         bowlInnings += 1
-        if (score.not_out) nos += 1
       }
 
       bf += ballsFaced
@@ -86,11 +85,6 @@ const page = () => {
     fetchData()
   }, [playerId])
 
-  const handleEditClick = (entryId: string) => {
-    setSelectedEntryId(entryId)
-    setIsAdminPinOpen(true)
-  }
-
   const handlePinVerified = () => {
     setIsAdminPinOpen(false)
     if (selectedEntryId) {
@@ -98,9 +92,10 @@ const page = () => {
     }
   }
 
-  if (loading) return (
-    <p className="font-mono text-xs text-zinc-500 p-4">// LOADING PLAYER STATS...</p>
-  )
+  if (loading) {
+    return (
+    <p className="font-mono text-xs text-zinc-500 p-4">// LOADING PLAYER'S PROFILE...</p>
+  )}
 
   return (
     <div>
