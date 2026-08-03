@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
-import { Rajdhani, Share_Tech_Mono } from "next/font/google";
+import { Rajdhani, Share_Tech_Mono, Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+import { Toaster } from 'sonner';
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
@@ -24,13 +28,19 @@ export const metadata: Metadata = {
     apple: "/logo.png",
   },
   manifest: '/manifest.json',
-  themeColor: '#00e5ff',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'CricScore',
   },
 };
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#00e5ff',
+}
+
 
 export default function RootLayout({
   children,
@@ -40,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${rajdhani.variable} ${shareTechMono.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", rajdhani.variable, shareTechMono.variable, "font-sans", geist.variable)}
     >
       <head>
         <link rel="manifest" href="/manifest.json" />
@@ -52,6 +62,10 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col font-sans p-5 bg-[#0d1420] text-white">
         {children}
+        <Toaster 
+          richColors 
+          position="top-center" 
+        />
         <Analytics />
         <script dangerouslySetInnerHTML={{
           __html: `

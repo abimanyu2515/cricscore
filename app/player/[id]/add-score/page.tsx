@@ -6,6 +6,7 @@ import ScoreHeader from '@/app/components/addScore/ScoreHeader'
 import StatInputCard from '@/app/components/addScore/StatInputCard'
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 const today = new Date()
 const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
@@ -86,7 +87,7 @@ const Page = () => {
       const data =  await res.json()
 
       if (!res.ok) {
-        alert(data.error || 'Failed to save score')
+        toast.error(data.error || 'Failed to save score')
         return
       }
 
@@ -105,9 +106,10 @@ const Page = () => {
       setMatchLabel('')
       setDate(todayString)
 
-      alert('Score saved successfully')
+      toast.success('Score saved successfully')
+      redirect.push('/')
     } catch (error) {
-      alert('An error occurred while saving the score')
+      toast.error('An error occurred while saving the score')
     }
   }
 

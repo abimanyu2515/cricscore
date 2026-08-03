@@ -3,8 +3,10 @@
 import ScoreHeader from '@/app/components/addScore/ScoreHeader'
 import StatInputCard from '@/app/components/addScore/StatInputCard'
 import ScoreAction from '@/app/components/addScore/ScoreAction'
+import ConfirmDeleteDialog from '@/app/components/ConfirmDeleteDialog'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner';
 
 const EditPage = () => {
   const params = useParams()
@@ -28,6 +30,7 @@ const EditPage = () => {
   const [runsGiven, setRunsGiven] = useState('')
   const [wickets, setWickets] = useState('')
   const [maidens, setMaidens] = useState('')
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
   const battingFields = [
     { label: 'RUNS', value: runs, onChange: setRuns, type: 'number' as const },
@@ -74,7 +77,7 @@ const EditPage = () => {
         setWickets(scoreData.wickets?.toString() || '')
         setMaidens(scoreData.maidens?.toString() || '')
       } catch (err) {
-        alert('Failed to load score data')
+        toast.error('Failed to load score data')
       } finally {
         setLoading(false)
       }
@@ -108,14 +111,34 @@ const EditPage = () => {
       const data = await res.json()
 
       if (!res.ok) {
-        alert(data.error || 'Failed to update score')
+        toast.error(data.error || 'Failed to update score')
         return
       }
 
-      alert('Score updated successfully')
+      toast.success('Score updated successfully')
       router.back()
     } catch (error) {
-      alert('An error occurred while updating the score')
+      toast.error('An error occurred while updating the score')
+    }
+  }
+
+  const handleDelete = () => {
+    setIsDeleteOpen(true)
+  }
+
+  const confirmDelete = async () => {
+    setIsDeleteOpen(false)
+    try {
+      const res = await fetch(`/api/players/${playerId}/scores/${entryId}`, { method: 'DELETE' })
+      const data = await res.json()
+      if (!res.ok) {
+        toast.error(data.error || 'Failed to delete score')
+        return
+      }
+      toast.success('Score deleted successfully')
+      router.push(`/player/${playerId}/profile`)
+    } catch (error) {
+      toast.error('An error occurred while deleting the score')
     }
   }
 
@@ -153,6 +176,15 @@ const EditPage = () => {
       <ScoreAction
         onSave={handleSave}
         onCancel={() => router.back()}
+        onDelete={handleDelete}
+      />
+
+      <ConfirmDeleteDialog
+        isOpen={isDeleteOpen}
+        title="DELETE SCORE"
+        message="Are you sure you want to delete this score? This action cannot be undone."
+        onConfirm={confirmDelete}
+        onCancel={() => setIsDeleteOpen(false)}
       />
     </div>
   )

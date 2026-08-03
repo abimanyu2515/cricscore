@@ -16,3 +16,30 @@
 .shake {
   animation: shake 0.4s ease;
 }
+
+[data-sonner-toaster] {
+  font-family: var(--font-share-tech-mono), monospace !important;
+  font-weight: bold !important;
+  font-size: 16px !important;
+}
+
+[data-sonner-toast] {
+  background: #111c2e !important;
+  border: 1px solid #1a3040 !important;
+  color: #d0e8f0 !important;
+  border-radius: 8px !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  border-color: rgb(6, 196, 6) !important;
+  color: rgb(6, 196, 6) !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  border-color: #ff4560 !important;
+  color: #ff4560 !important;
+}
+
+[data-sonner-toast] [data-title] {
+  font-weight: 600;
+}

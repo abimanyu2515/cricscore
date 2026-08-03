@@ -66,7 +66,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     // Validate runs breakdown
     const run_sum = (singles * 1) + (doubles * 2) + (triples * 3) + (fours * 4) + (sixes * 6)
 
-    if (run_sum > runs) {
+    if (run_sum !== runs) {
         return NextResponse.json(
             { error: "The total runs must be equal to the runs breakdown of singles, doubles, triples, fours, and sixes" },
             { status: 400 }

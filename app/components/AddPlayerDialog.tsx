@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { X } from "lucide-react"
+import { toast } from "sonner";
 
 const ROLE_OPTIONS = ['Batsman', 'Bowler', 'All-rounder'] as const
 
@@ -18,7 +19,10 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
   if (!isOpen) return null
 
   const handleCreate = async () => {
-    if (!name.trim()) return // name is required
+    if (!name.trim()) {
+      toast.error("Player name required")
+      return
+    }
 
     try {
       const res = await fetch('api/players', {
@@ -34,11 +38,12 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
       }
 
       onCreate(data.name, data.role)
+      toast.success(`${data.name} added successfully`)
       setName('')
       setRole('Batsman')
     } catch (err) {
         console.error('Error creating player:', err)
-        alert(err instanceof Error ? err.message : 'An unexpected error occurred')
+        toast.error(err instanceof Error ? err.message : 'An unexpected error occurred')
     }
   }
 
