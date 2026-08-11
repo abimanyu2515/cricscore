@@ -1,6 +1,9 @@
 import { Lock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-const TopNav = ({ setShowAdminDialog }: { setShowAdminDialog: (show: boolean) => void }) => {
+const TopNav = () => {
+  const router = useRouter()
+
   return (
     <div className='flex justify-between text-white items-center'>
       <div>
@@ -10,7 +13,7 @@ const TopNav = ({ setShowAdminDialog }: { setShowAdminDialog: (show: boolean) =>
         <span className='text-xs text-slate-500 font-mono'>// PLAYERS STATS TRACKER</span>
       </div>
 
-      <button onClick={() => setShowAdminDialog(true)} className='bg-[#111c2e] border border-[#1a3040] p-2 rounded-md flex items-center gap-1 hover:text-[#b9e03c] active:text-[#b9e03c] cursor-pointer'>
+      <button onClick={() => router.push('/admin')} className='bg-[#111c2e] border border-[#1a3040] p-2 rounded-md flex items-center gap-1 hover:text-[#b9e03c] active:text-[#b9e03c] cursor-pointer'>
         <Lock width={20} />
       </button>
     </div>

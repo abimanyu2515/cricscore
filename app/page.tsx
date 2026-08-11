@@ -4,14 +4,12 @@ import AddPlayerCard from "./components/AddPlayerCard"
 import BottomNav from "./components/BottomNav"
 import FilterRow from "./components/FilterRow"
 import TopNav from "./components/TopNav"
-import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import AddPlayerDialog from "./components/AddPlayerDialog"
 import AdminPinDialog from "./components/AdminPinDialog"
 import PlayerCardWrapper from "./components/PlayerCardWrapper"
 
 const Page = () => {
-  const router = useRouter()
 
   const [players, setPlayers] = useState<Array<{
     id: string
@@ -58,13 +56,13 @@ const Page = () => {
 
   return (
     <div>
-      <TopNav setShowAdminDialog={setShowAdminDialog} />
+      <TopNav />
       <AdminPinDialog
         isOpen={showAdminDialog}
         onClose={() => setShowAdminDialog(false)}
         onVerified={() => {
           setShowAdminDialog(false)
-          router.push('/admin')
+          window.location.href = '/admin'
         }}
       />
       <AddPlayerDialog
