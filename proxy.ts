@@ -4,10 +4,8 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const accessCookie = request.cookies.get('cricscore_access')
-  const adminCookie = request.cookies.get('cricscore_admin')
 
   const isAccessGranted = accessCookie?.value === 'granted'
-  const isAdminGranted = adminCookie?.value === 'granted'
 
   const isAccessPage = pathname === '/access'
   const isAdminAccessPage = pathname === '/admin-access'
@@ -19,15 +17,9 @@ export function proxy(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Gate 1 — site-wide access PIN (checked first, applies to everything)
+  // Gate — site-wide access PIN (applies to every route)
   if (!isAccessGranted) {
     return NextResponse.redirect(new URL('/access', request.url))
-  }
-
-  // Gate 2 — admin PIN (only applies to /admin routes)
-  const isAdminRoute = pathname.startsWith('/admin')
-  if (isAdminRoute && !isAdminGranted) {
-    return NextResponse.redirect(new URL('/admin-access', request.url))
   }
 
   return NextResponse.next()

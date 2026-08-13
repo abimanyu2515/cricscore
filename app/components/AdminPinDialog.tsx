@@ -66,7 +66,7 @@ const AdminPinDialog = ({ isOpen, onClose, onVerified }: AdminPinDialogProps) =>
 
   return (
     // Overlay
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-6">
+    <div className="fixed inset-0 bg-black/70 md:bg-transparent flex items-center justify-center z-50 px-6 lg:max-w-2xl lg:mx-auto">
       
       {/* Dialog */}
       <div className={`w-full bg-zinc-900 border border-cyan-400 rounded-xl p-6 ${shaking ? 'shake' : ''}`}>
@@ -92,8 +92,8 @@ const AdminPinDialog = ({ isOpen, onClose, onVerified }: AdminPinDialogProps) =>
               value={digit}
               onChange={(e) => handleChange(e.target.value, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className={`w-12 h-12 text-center text-xl font-mono bg-zinc-800 
-                border rounded-md focus:outline-none
+              className={`w-12 h-12 text-center text-xl font-mono
+                border-b focus:outline-none
                 ${error 
                   ? 'border-red-500 text-red-400' 
                   : 'border-zinc-600 text-cyan-400 focus:border-cyan-400'
