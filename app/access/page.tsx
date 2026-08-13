@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { toast } from 'sonner'
 
 const Access = () => {
-  const [pin, setPin] = useState(['', '', '', '', '', ''])
+  const [pin, setPin] = useState(['', '', '', '', ''])
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   const handleChange = (value: string, index: number) => {
@@ -36,14 +36,14 @@ const Access = () => {
       window.location.href = '/'
     } else {
       toast.error('Invalid PIN')
-      setPin(['', '', '', '', '', ''])
+      setPin(['', '', '', '', ''])
       inputRefs.current[0]?.focus()
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#080c12] px-6">
-      <div className="w-full max-w-sm border border-cyan-400 rounded-xl p-6 bg-zinc-900">
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="w-full max-w-sm border border-cyan-400 rounded-xl p-4 bg-zinc-900">
         <h1 className="font-mono text-cyan-400 text-xs tracking-widest mb-1">
           // CRICSCORE
         </h1>
@@ -61,8 +61,8 @@ const Access = () => {
               value={digit}
               onChange={(e) => handleChange(e.target.value, index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
-              className="w-12 h-12 text-center text-xl font-mono bg-zinc-800
-                border border-zinc-600 text-cyan-400 rounded-md
+              className="w-10 h-12 text-center text-xl font-mono
+                border-b border-zinc-600 text-cyan-400
                 focus:outline-none focus:border-cyan-400"
             />
           ))}

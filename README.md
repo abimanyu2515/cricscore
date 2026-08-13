@@ -21,12 +21,10 @@ CricScore is a Next.js cricket score tracker for managing players, recording mat
 
 ## Access Control
 
-Access is enforced server-side by `proxy.ts`. Cookies are `httpOnly` and set after a valid PIN is entered:
+Access is enforced by `proxy.ts` (site-wide gate) plus an admin PIN gate on the `/admin` page itself. Cookies are `httpOnly` and set after a valid PIN is entered:
 
-1. **Gate 1 — site access**: every route (except `/access`, `/admin-access`, and the verify APIs) requires the `cricscore_access` cookie. Unauthorized requests redirect to `/access`.
-2. **Gate 2 — admin**: routes under `/admin*` additionally require the `cricscore_admin` cookie. Unauthorized requests redirect to `/admin-access`.
-
-Verifying the admin PIN also grants the site access cookie, so a verified admin can reach `/admin` directly without first visiting `/access`. After a successful PIN entry the client performs a hard redirect (`window.location.href`) so the proxy re-evaluates the freshly set cookies on a fresh server request.
+1. **Site access**: every route (except `/access`, `/admin-access`, and the verify APIs) requires the `cricscore_access` cookie. Unauthorized requests redirect to `/access`.
+2. **Admin access**: the `/admin` page prompts for the admin PIN (`AdminPinDialog`) on every visit and only renders the admin panel after a successful verification — no persistent admin cookie is used, so access is never remembered.
 
 ## App Flow
 

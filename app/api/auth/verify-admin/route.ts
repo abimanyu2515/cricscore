@@ -19,13 +19,6 @@ export async function POST(request: Request) {
   }
 
   const response = NextResponse.json({ success: true })
-  response.cookies.set('cricscore_admin', 'granted', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: '/',
-  })
   response.cookies.set('cricscore_access', 'granted', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

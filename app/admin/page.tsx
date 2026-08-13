@@ -6,11 +6,13 @@ import AdminHeader from "../components/admin/AdminHeader"
 import AdminPlayerList from "../components/admin/AdminPlayerList"
 import ManagePlayers from "../components/admin/ManagePlayers"
 import AddPlayerDialog from "../components/AddPlayerDialog"
+import AdminPinDialog from "../components/AdminPinDialog"
 import { toast } from "sonner";
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
 
 const Page = () => {
   const router = useRouter()
+  const [isPinVerified, setIsPinVerified] = useState(false)
   const [players, setPlayers] = useState<Array<{
     id: string
     name: string
@@ -45,6 +47,7 @@ const Page = () => {
   }
 
   useEffect(() => {
+    if (!isPinVerified) return
     const fetchPlayers = async () => {
       setLoading(true)
       const res = await fetch('/api/players')
@@ -53,7 +56,17 @@ const Page = () => {
       setLoading(false)
     }
     fetchPlayers()
-  }, [])
+  }, [isPinVerified])
+
+  if (!isPinVerified) {
+    return (
+      <AdminPinDialog
+        isOpen
+        onClose={() => router.push('/')}
+        onVerified={() => setIsPinVerified(true)}
+      />
+    )
+  }
 
   if (loading) return (
     <p className="font-mono text-xs text-zinc-500 p-4">// LOADING...</p>
