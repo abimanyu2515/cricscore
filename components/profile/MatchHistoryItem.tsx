@@ -2,7 +2,7 @@
 
 import matchHistoryItemProps from "@/types/matchHistoryItemProps"
 import { useState } from 'react'
-import AdminPinDialog from '../AdminPinDialog'
+import AdminPinDialog from '../ui/AdminPinDialog'
 
 const MatchHistoryItem = ({ date, matchLabel, batting, bowling, onEdit }: matchHistoryItemProps) => {
     const [showPin, setShowPin] = useState(false)

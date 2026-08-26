@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import MatchHistory from '@/app/components/profile/MatchHistory'
-import ProfileHeader from '@/app/components/profile/ProfileHeader'
-import StatsGrid from '@/app/components/profile/StatsGrid'
-import AdminPinDialog from '@/app/components/AdminPinDialog'
+import MatchHistory from '@/components/profile/MatchHistory'
+import ProfileHeader from '@/components/profile/ProfileHeader'
+import StatsGrid from '@/components/profile/StatsGrid'
+import AdminPinDialog from '@/components/ui/AdminPinDialog'
 import { useParams, useRouter } from 'next/navigation'
 
 const page = () => {

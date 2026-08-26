@@ -1,9 +1,9 @@
 'use client'
 
-import DateMatchRow from '@/app/components/addScore/DateMatchRow'
-import ScoreAction from '@/app/components/addScore/ScoreAction'
-import ScoreHeader from '@/app/components/addScore/ScoreHeader'
-import StatInputCard from '@/app/components/addScore/StatInputCard'
+import DateMatchRow from '@/components/addScore/DateMatchRow'
+import ScoreAction from '@/components/addScore/ScoreAction'
+import ScoreHeader from '@/components/addScore/ScoreHeader'
+import StatInputCard from '@/components/addScore/StatInputCard'
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
