@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import LeaderBoardHeader from '../components/leaderboard/LeaderBoardHeader';
-import LeaderBoardTabs from '../components/leaderboard/LeaderBoardTabs';
-import LeaderBoardList from '../components/leaderboard/LeaderBoardList';
+import LeaderBoardHeader from '@/components/leaderboard/LeaderBoardHeader';
+import LeaderBoardTabs from '@/components/leaderboard/LeaderBoardTabs';
+import LeaderBoardTable from '@/components/leaderboard/LeaderBoardTable';
+import type {
+    leaderBoardTableColumnProps,
+    leaderBoardTableRowProps,
+    leaderboardPlayerProps,
+} from '@/types/leaderboardProps';
 
 const compareOptionalNumbersAsc = (
   a: number | null | undefined,
@@ -27,16 +32,41 @@ const parseBestFigures = (bestFigures: string | null | undefined) => {
   }
 }
 
+const battingColumns: leaderBoardTableColumnProps[] = [
+  { label: 'Matches' },
+  { label: 'Inns' },
+  { label: 'Runs' },
+  { label: 'BF' },
+  { label: 'Avg' },
+  { label: 'STR' },
+  { label: '4s' },
+  { label: '6s' },
+  { label: 'HS' },
+  { label: 'NOs' },
+]
+
+const bowlingColumns: leaderBoardTableColumnProps[] = [
+  { label: 'Matches' },
+  { label: 'Inns' },
+  { label: 'WKTS' },
+  { label: 'Overs' },
+  { label: 'ECO' },
+  { label: 'Runs Given' },
+  { label: '3WI' },
+  { label: '5WI' },
+  { label: 'BBM' },
+]
+
 const Page = () => {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'BATTING' | 'BOWLING'>('BATTING')
-  const [players, setPlayers] = useState<any[]>([])
+  const [players, setPlayers] = useState<leaderboardPlayerProps[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchPlayers = async () => {
       const res = await fetch('/api/players')
-      const data = await res.json()
+      const data: leaderboardPlayerProps[] = await res.json()
       setPlayers(data)
       setLoading(false)
     }
@@ -44,7 +74,7 @@ const Page = () => {
   }, [])
 
   // Sort by runs for batting
-  const battingPlayers = [...players]
+  const battingRows: leaderBoardTableRowProps[] = [...players]
     .sort((a, b) => {
           // 1. Primary: Total Runs (Descending)
         const runsA = a.computed_stats?.total_runs ?? 0;
@@ -63,8 +93,8 @@ const Page = () => {
 
         // 4. Tie-breaker 3: Innings Played (Ascending - fewer is better)
         const inningsOrder = compareOptionalNumbersAsc(
-          a.computed_stats?.innings,
-          b.computed_stats?.innings
+          a.derived_stats?.batInnings,
+          b.derived_stats?.batInnings
         )
         if (inningsOrder !== 0) return inningsOrder
 
@@ -73,15 +103,22 @@ const Page = () => {
     .map((player) => ({
       id: player.id,
       playerName: player.name,
-      stats: [
-        { label: 'RUNS', value: player.computed_stats?.total_runs ?? 0 },
-        { label: 'AVG', value: player.computed_stats?.batting_avg ?? '-' },
-        { label: 'SR', value: player.computed_stats?.strike_rate ?? '-' },
-      ]
+      values: [
+        player.computed_stats?.games_played ?? 0,
+        player.derived_stats?.batInnings ?? 0,
+        player.computed_stats?.total_runs ?? 0,
+        player.derived_stats?.ballsFaced ?? 0,
+        player.computed_stats?.batting_avg ?? '-',
+        player.computed_stats?.strike_rate ?? '-',
+        player.derived_stats?.fours ?? 0,
+        player.derived_stats?.sixes ?? 0,
+        player.computed_stats?.highest_score ?? 0,
+        player.derived_stats?.notOuts ?? 0,
+      ],
     }))
 
   // Sort by wickets for bowling
-  const bowlingPlayers = [...players]
+  const bowlingRows: leaderBoardTableRowProps[] = [...players]
     .sort((a, b) => {
         // 1. Primary: Total Wickets (Descending)
         const wicketsA = a.computed_stats?.total_wickets ?? 0;
@@ -110,11 +147,17 @@ const Page = () => {
     .map((player) => ({
       id: player.id,
       playerName: player.name,
-      stats: [
-        { label: 'WKTS', value: player.computed_stats?.total_wickets ?? 0 },
-        { label: 'ECO', value: player.computed_stats?.economy ?? '-' },
-        { label: 'BEST', value: player.computed_stats?.best_figures ?? '-' },
-      ]
+      values: [
+        player.computed_stats?.games_played ?? 0,
+        player.derived_stats?.bowlInnings ?? 0,
+        player.computed_stats?.total_wickets ?? 0,
+        (player.derived_stats?.oversBowled ?? 0).toFixed(1),
+        player.computed_stats?.economy ?? '-',
+        player.derived_stats?.runsGiven ?? 0,
+        player.derived_stats?.threeWi ?? 0,
+        player.derived_stats?.fiveWi ?? 0,
+        player.computed_stats?.best_figures ?? '-',
+      ],
     }))
 
   if (loading) return (
@@ -129,9 +172,9 @@ const Page = () => {
         onTabChange={setActiveTab}
       />
       {activeTab === 'BATTING' ? (
-        <LeaderBoardList type='BATTING' players={battingPlayers} />
+        <LeaderBoardTable type='BATTING' columns={battingColumns} rows={battingRows} />
       ) : (
-        <LeaderBoardList type='BOWLING' players={bowlingPlayers} />
+        <LeaderBoardTable type='BOWLING' columns={bowlingColumns} rows={bowlingRows} />
       )}
     </div>
   )

@@ -1,13 +1,13 @@
 'use client'
 
-import AddPlayerCard from "./components/AddPlayerCard"
-import BottomNav from "./components/BottomNav"
-import FilterRow from "./components/FilterRow"
-import TopNav from "./components/TopNav"
+import AddPlayerCard from "@/components/ui/AddPlayerCard"
+import BottomNav from "@/components/ui/BottomNav"
+import FilterRow from "@/components/ui/FilterRow"
+import TopNav from "@/components/ui/TopNav"
 import { useEffect, useState } from "react"
-import AddPlayerDialog from "./components/AddPlayerDialog"
-import AdminPinDialog from "./components/AdminPinDialog"
-import PlayerCardWrapper from "./components/PlayerCardWrapper"
+import AddPlayerDialog from "@/components/ui/AddPlayerDialog"
+import AdminPinDialog from "@/components/ui/AdminPinDialog"
+import PlayerCardWrapper from "@/components/ui/PlayerCardWrapper"
 
 const Page = () => {
 

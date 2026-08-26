@@ -1,9 +1,9 @@
 'use client'
 
-import ScoreHeader from '@/app/components/addScore/ScoreHeader'
-import StatInputCard from '@/app/components/addScore/StatInputCard'
-import ScoreAction from '@/app/components/addScore/ScoreAction'
-import ConfirmDeleteDialog from '@/app/components/ConfirmDeleteDialog'
+import ScoreHeader from '@/components/addScore/ScoreHeader'
+import StatInputCard from '@/components/addScore/StatInputCard'
+import ScoreAction from '@/components/addScore/ScoreAction'
+import ConfirmDeleteDialog from '@/components/ui/ConfirmDeleteDialog'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner';

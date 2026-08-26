@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import AdminHeader from "../components/admin/AdminHeader"
-import AdminPlayerList from "../components/admin/AdminPlayerList"
-import ManagePlayers from "../components/admin/ManagePlayers"
-import AddPlayerDialog from "../components/AddPlayerDialog"
-import AdminPinDialog from "../components/AdminPinDialog"
+import AdminHeader from "@/components/admin/AdminHeader"
+import AdminPlayerList from "@/components/admin/AdminPlayerList"
+import ManagePlayers from "@/components/admin/ManagePlayers"
+import AddPlayerDialog from "@/components/ui/AddPlayerDialog"
+import AdminPinDialog from "@/components/ui/AdminPinDialog"
 import { toast } from "sonner";
-import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
+import ConfirmDeleteDialog from "@/components/ui/ConfirmDeleteDialog";
 
 const Page = () => {
   const router = useRouter()
