@@ -29,7 +29,7 @@
 
 ## Starter System Designs
 
-- The app was already built and depolyed
+- This is a mobile-first web app which was already built and depolyed.
 - By default there will be a add new player card. User click the add new player card, a dialog appears the user enter the name and chooses the role .
 - The player data is stored in the DB. A new player card will be added in the home page.
 - When the user adds score to a player, the total runs should match the division of runs.

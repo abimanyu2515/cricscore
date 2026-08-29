@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from 'sonner';
+import Sidebar from '@/components/ui/Sidebar';
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -61,6 +62,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="CricScore" />
       </head>
       <body className="min-h-full flex flex-col font-sans p-5 bg-[#0d1420] text-white">
+        <Sidebar />
         {children}
         <Toaster 
           richColors 
