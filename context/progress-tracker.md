@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Overall Stats refactor (leaderboard)
+- Create Sidebar (overlay navigation)
 
 ## Current Goal
 
-- Implement `context/feature-specs/refactor-overall-stats.md`: replace LeaderBoardList/LeaderBoardItem with table views (fixed name column, horizontally scrollable attributes) for batting & bowling sections.
+- Implement `context/feature-specs/create-sidebar.md`: overlay sidebar accessible from all routes (top-right icon), first row Appname + close icon, menus Overall Stats (/leaderboard) and Manage Players (/admin); home: remove Overall Stats button + lock icon, delete BottomNav; add-score/edit: centered player name + top-right sidebar; profile: top-right sidebar; leaderboard: replace BACK with // OVERALL STATS left, sidebar icon right; no sidebar in /admin.
 
 ## Completed
 
@@ -18,7 +18,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## In Progress
 
-- None.
+- Create Sidebar overlay (50%): global Sidebar component + header/layout updates pending verification.
 
 ## Open Questions
 

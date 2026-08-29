@@ -2,7 +2,7 @@
 
 ## Overview
 
-CricScore is a Cricket Score Tracker App for a Cricket Team. Here the scores and wickets of each player are entered match-wise, the players can go through match history in profile and overall stats to compare & compete. Admin page is accessible by players who has admin pin to edit or delete players personal or match data.
+CricScore is a Cricket Score Tracker App for a Cricket Team. This is a mobile-first web app. Here the scores and wickets of each player are entered match-wise, the players can go through match history in profile and overall stats to compare & compete. Admin page is accessible by players who has admin pin to edit or delete players personal or match data.
 
 ## Goals
 

@@ -1,7 +1,5 @@
 'use client'
 
-import AddPlayerCard from "@/components/ui/AddPlayerCard"
-import BottomNav from "@/components/ui/BottomNav"
 import FilterRow from "@/components/ui/FilterRow"
 import TopNav from "@/components/ui/TopNav"
 import { useEffect, useState } from "react"
@@ -33,11 +31,6 @@ const Page = () => {
     if (activeFilter === 'ALL-ROUNDER') return p.role === 'All-rounder'
     return true
   })
-
-  // When + NEW PLAYER card is tapped
-  const handleAddPlayerCard = () => {
-    setShowAddPlayer(true)
-  }
 
   // Fetching player data from supabase
   useEffect(() => {
@@ -91,9 +84,7 @@ const Page = () => {
             />
           ))
         }
-        <AddPlayerCard onClick={handleAddPlayerCard} />
       </div>
-      <BottomNav />
     </div>
   )
 }
