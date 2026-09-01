@@ -31,7 +31,7 @@ Access is enforced by `proxy.ts` (site-wide gate) plus an admin PIN gate on the 
 ```mermaid
 flowchart TD
   A[Any / route] --> B{Access PIN valid?}
-  B -- No --> C[/access]
+  B -- No --> C[access /]
   B -- Yes --> D[Home /]
   D --> E[Filter & Browse Players]
   E --> F[Player Profile /player/:id/profile]
@@ -39,7 +39,7 @@ flowchart TD
   F --> H[Edit Entry /player/:id/add-score/:entryId/edit]
   D --> I[Leaderboard /leaderboard]
   D --> J{Admin PIN valid?}
-  J -- No --> K[/admin-access]
+  J -- No --> K[admin-access]
   J -- Yes --> L[Admin /admin]
   L --> M[Manage Players]
 ```

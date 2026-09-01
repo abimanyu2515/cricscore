@@ -1,6 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react"
 import { useState } from "react"
-import { BATTING_HAND_OPTIONS, BOWLING_HAND_OPTIONS, BOWLING_STYLE_OPTIONS, formatPlayerStyle, type BattingHand, type BowlingHand, type BowlingStyle } from "@/lib/playerStyles"
+import { BATTING_HAND_OPTIONS, BOWLING_HAND_OPTIONS, BOWLING_STYLE_OPTIONS, type BattingHand, type BowlingHand, type BowlingStyle } from "@/lib/playerStyles"
 
 const ROLE_OPTIONS = ['Batsman', 'Bowler', 'All-rounder'] as const
 
@@ -32,7 +32,6 @@ const AdminPlayerItem = ({ id, playerName, role, batting_hand, bowling_hand, bow
               <div>
                 <h1 className="text-2xl font-bold">{playerName.toUpperCase()}</h1>
                 <p className="text-sm font-mono text-slate-400">{role}</p>
-                <p className="text-xs font-mono text-zinc-500 mt-0.5">{formatPlayerStyle({ batting_hand, bowling_hand, bowling_style, role })}</p>
             </div>
 
             <div className="flex items-center text-slate-500 gap-3">
