@@ -64,7 +64,7 @@ const Sidebar = () => {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full bg-[#0d1420] border-l border-[#1a3040] z-50 transform transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 h-full w-full lg:w-150 bg-[#0d1420] border-l border-[#1a3040] z-50 transform transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
         role="dialog"
         aria-modal="true"
         aria-hidden={!open}

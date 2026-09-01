@@ -1,5 +1,5 @@
 <!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
@@ -10,9 +10,9 @@ Read the following files in order before implementing or making any architectura
 
 1. `context/project-overview.md` — product definition, goals, features, and scope
 2. `context/architecture-context.md` — system structure, boundaries, storage model, and invariants
-4. `context/code-standards.md` — implementation rules and conventions
-5. `context/ai-workflow-rules.md` — development workflow, scoping rules, and delivery approach
-6. `context/progress-tracker.md` — current phase, completed work, open questions, and next steps
+3. `context/code-standards.md` — implementation rules and conventions
+4. `context/ai-workflow-rules.md` — development workflow, scoping rules, and delivery approach
+5. `context/progress-tracker.md` — current phase, completed work, open questions, and next steps
 
 Update `context/progress-tracker.md` after each meaningful implementation change.
 
@@ -45,8 +45,8 @@ cricscore/
    ├── app/
    │   ├── access/                      # Login / Register pages
    |   ├── admin/
-   |   ├──admin-access/
-   |   ├──api/
+   |   ├── admin-access/
+   |   ├── api/
    |   |    ├── auth/
    |   |    |   ├──verify-access
    |   |    |   └──verify-admin
@@ -55,20 +55,20 @@ cricscore/
    |   |            └──scores/
    |   |                └──[entryid]/
    |   ├── hooks/
-   |   ├──leaderboard
-   |   ├──player/
-   |    └──[id]
-   |   |        ├──add-score
-   |   |        └──profile
-   |   ├──globals.css
-   |   ├──layout.tsx
-   |   └──page.tsx
+   |   ├── leaderboard
+   |   ├── player/
+   |   |   └──[id]
+   |   |       ├──add-score
+   |   |       └──profile
+   |   ├── globals.css
+   |   ├── layout.tsx
+   |   └── page.tsx
    ├── components/
    │   ├── addScore/
-   |   ├──admin/
-   |   ├──leaderboard/
-   |   ├──profile/
-   |   └──ui/
+   |   ├── admin/
+   |   ├── leaderboard/
+   |   ├── profile/
+   |   └── ui/
    ├── context/
    ├── db
    ├── lib/               
