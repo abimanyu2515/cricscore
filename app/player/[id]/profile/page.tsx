@@ -104,6 +104,9 @@ const page = () => {
             <ProfileHeader
               name={player.name}
               role={player.role}
+              batting_hand={player.batting_hand}
+              bowling_hand={player.bowling_hand}
+              bowling_style={player.bowling_style}
               onBack={() => router.push('/')} 
             />
             <StatsGrid 
