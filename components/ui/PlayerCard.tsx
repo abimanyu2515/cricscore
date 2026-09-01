@@ -9,7 +9,7 @@ const PlayerCard = ({ playerName, role, totalRuns, totalWickets }: PlayerCardPro
             <hr className="mt-2 text-zinc-700" />
             <div className="grid grid-cols-2 m-0 font-mono">
                 <div className="flex flex-col text-center justify-center py-2 text-slate-500"><b className="text-cyan-300">{totalRuns}</b> <span className="text-slate-400 text-xs">RUNS</span></div>
-                <div className="flex flex-col text-center justify-center text-slate-500 border-l border-zinc-700"><b className="text-cyan-300">{totalWickets}</b> <span className="text-slate-400 text-xs">WICKETS</span></div>
+                <div className="flex flex-col text-center justify-center text-slate-500 border-l border-zinc-700"><b className="text-purple-300">{totalWickets}</b> <span className="text-slate-400 text-xs">WICKETS</span></div>
             </div>
         </div>
     </div>

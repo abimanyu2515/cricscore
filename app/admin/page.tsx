@@ -17,6 +17,9 @@ const Page = () => {
     id: string
     name: string
     role: string
+    batting_hand?: string | null
+    bowling_hand?: string | null
+    bowling_style?: string | null
   }>>([])
   const [showAddPlayer, setShowAddPlayer] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -93,15 +96,18 @@ const Page = () => {
         />
 
         <ManagePlayers onAddPlayer={() => setShowAddPlayer(true)} />
-        <AdminPlayerList players={players.map(({ id, name, role }) => ({
+        <AdminPlayerList players={players.map(({ id, name, role, batting_hand, bowling_hand, bowling_style }) => ({
           id,
           playerName: name,
           role,
-          onUpdate: async (newName: string, newRole: string) => {
+          batting_hand,
+          bowling_hand,
+          bowling_style,
+          onUpdate: async (newName: string, newRole: string, battingHand: string, bowlingHand: string, bowlingStyle: string) => {
             const res = await fetch(`/api/players/${id}`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name: newName, role: newRole })
+              body: JSON.stringify({ name: newName, role: newRole, batting_hand: battingHand, bowling_hand: bowlingHand, bowling_style: bowlingStyle })
             })
 
             if (!res.ok) {

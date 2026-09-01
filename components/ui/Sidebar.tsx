@@ -35,7 +35,7 @@ const Sidebar = () => {
       <button
         aria-label="Open sidebar"
         onClick={() => setOpen(true)}
-        className="fixed top-5 border border-cyan-400 right-5 z-50 p-2 rounded-md flex items-center justify-center hover:text-[#b9e03c] active:text-[#b9e03c] cursor-pointer"
+        className="border border-cyan-400 z-50 p-2 rounded-md flex items-center justify-center hover:text-[#b9e03c] active:text-[#b9e03c] cursor-pointer"
       >
         <svg
           width={20}

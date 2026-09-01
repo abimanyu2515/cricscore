@@ -4,6 +4,9 @@ create table public.players (
   id uuid not null default gen_random_uuid (),
   name text not null,
   role text null,
+  batting_hand text not null default 'Right' check (batting_hand = any (array['Right'::text, 'Left'::text])),
+  bowling_hand text not null default 'Right' check (bowling_hand = any (array['Right'::text, 'Left'::text])),
+  bowling_style text not null default 'Medium' check (bowling_style = any (array['Fast'::text, 'Fast-medium'::text, 'Medium-fast'::text, 'Medium'::text, 'Off spin'::text, 'Leg spin'::text])),
   created_at timestamp without time zone null default now(),
   constraint players_pkey primary key (id),
   constraint players_role_check check (
@@ -18,6 +21,11 @@ create table public.players (
     )
   )
 ) TABLESPACE pg_default;
+
+-- Migration for existing databases: assign defaults to existing players
+-- alter table public.players add column if not exists batting_hand text not null default 'Right' check (batting_hand = any (array['Right'::text, 'Left'::text]));
+-- alter table public.players add column if not exists bowling_hand text not null default 'Right' check (bowling_hand = any (array['Right'::text, 'Left'::text]));
+-- alter table public.players add column if not exists bowling_style text not null default 'Medium' check (bowling_style = any (array['Fast'::text, 'Fast-medium'::text, 'Medium-fast'::text, 'Medium'::text, 'Off spin'::text, 'Leg spin'::text]));
 
 create trigger on_player_created
 after INSERT on players for EACH row

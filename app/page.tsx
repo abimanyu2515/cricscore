@@ -44,7 +44,7 @@ const Page = () => {
   }, [])
 
   if (loading) return (
-    <p className="font-mono text-xs text-zinc-500 p-4">// LOADING PLAYERS...</p>
+    <p className="font-mono text-xs text-zinc-500 p-4">// LOADING CRICSCORE...</p>
   )
 
   return (

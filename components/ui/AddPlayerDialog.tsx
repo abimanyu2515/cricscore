@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 import { toast } from "sonner";
+import { BATTING_HAND_OPTIONS, BOWLING_HAND_OPTIONS, BOWLING_STYLE_OPTIONS, type BattingHand, type BowlingHand, type BowlingStyle } from "@/lib/playerStyles"
 
 const ROLE_OPTIONS = ['Batsman', 'Bowler', 'All-rounder'] as const
 
@@ -15,6 +16,9 @@ type AddPlayerDialogProps = {
 const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) => {
   const [name, setName] = useState('')
   const [role, setRole] = useState<(typeof ROLE_OPTIONS)[number]>('Batsman')
+  const [battingHand, setBattingHand] = useState<BattingHand>('Right')
+  const [bowlingHand, setBowlingHand] = useState<BowlingHand>('Right')
+  const [bowlingStyle, setBowlingStyle] = useState<BowlingStyle>('Medium')
 
   if (!isOpen) return null
 
@@ -28,7 +32,7 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
       const res = await fetch('api/players', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ name: name.trim(), role })
+        body: JSON.stringify({ name: name.trim(), role, batting_hand: battingHand, bowling_hand: bowlingHand, bowling_style: bowlingStyle })
       })
 
       const data = await res.json()
@@ -41,6 +45,9 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
       toast.success(`${data.name} added successfully`)
       setName('')
       setRole('Batsman')
+      setBattingHand('Right')
+      setBowlingHand('Right')
+      setBowlingStyle('Medium')
     } catch (err) {
         console.error('Error creating player:', err)
         toast.error(err instanceof Error ? err.message : 'An unexpected error occurred')
@@ -50,6 +57,9 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
   const handleClose = () => {
     setName('')
     setRole('Batsman')
+    setBattingHand('Right')
+    setBowlingHand('Right')
+    setBowlingStyle('Medium')
     onClose()
   }
 
@@ -82,7 +92,7 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
 
         {/* Role field */}
         <label className="font-mono text-xs text-zinc-500 tracking-widest">ROLE</label>
-        <div className="mt-2 mb-6 grid grid-cols-3 gap-2">
+        <div className="mt-2 mb-4 grid grid-cols-3 gap-2">
           {ROLE_OPTIONS.map((option) => (
             <button
               key={option}
@@ -98,6 +108,48 @@ const AddPlayerDialog = ({ isOpen, onClose, onCreate }: AddPlayerDialogProps) =>
               {option.toUpperCase()}
             </button>
           ))}
+        </div>
+
+        {/* Batting hand */}
+        <label className="font-mono text-xs text-zinc-500 tracking-widest">BATTING HAND</label>
+        <div className="mt-2 mb-4">
+          <select
+            value={battingHand}
+            onChange={(e) => setBattingHand(e.target.value as BattingHand)}
+            className="w-full bg-zinc-800 border border-zinc-600 focus:border-cyan-400 rounded-md px-3 py-2.5 text-white font-mono text-sm focus:outline-none"
+          >
+            {BATTING_HAND_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>{opt}-hand</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Bowling hand */}
+        <label className="font-mono text-xs text-zinc-500 tracking-widest">BOWLING HAND</label>
+        <div className="mt-2 mb-4">
+          <select
+            value={bowlingHand}
+            onChange={(e) => setBowlingHand(e.target.value as BowlingHand)}
+            className="w-full bg-zinc-800 border border-zinc-600 focus:border-cyan-400 rounded-md px-3 py-2.5 text-white font-mono text-sm focus:outline-none"
+          >
+            {BOWLING_HAND_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>{opt}-arm</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Bowling style */}
+        <label className="font-mono text-xs text-zinc-500 tracking-widest">BOWLING STYLE</label>
+        <div className="mt-2 mb-6">
+          <select
+            value={bowlingStyle}
+            onChange={(e) => setBowlingStyle(e.target.value as BowlingStyle)}
+            className="w-full bg-zinc-800 border border-zinc-600 focus:border-cyan-400 rounded-md px-3 py-2.5 text-white font-mono text-sm focus:outline-none"
+          >
+            {BOWLING_STYLE_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
         </div>
 
         {/* Create button */}
