@@ -28,15 +28,7 @@ const MONTHS = [
   { value: '12', label: 'December' },
 ]
 
-const MatchHistoryFilterDialog = ({
-  isOpen,
-  onClose,
-  selectedMonth,
-  selectedYear,
-  onApply,
-  onClear,
-  availableYears,
-}: MatchHistoryFilterDialogProps) => {
+const MatchHistoryFilterDialog = ({ isOpen, onClose, selectedMonth, selectedYear, onApply, onClear, availableYears, }: MatchHistoryFilterDialogProps) => {
   const [draftMonth, setDraftMonth] = useState(selectedMonth)
   const [draftYear, setDraftYear] = useState(selectedYear)
 
