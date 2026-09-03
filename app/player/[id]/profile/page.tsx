@@ -27,13 +27,17 @@ const page = () => {
     let totalRunsGiven = 0
     let totalWickets = 0
     let threeWi = 0
+    let fiveWi = 0
+    let oversBowled = 0
 
     for (const score of scores) {
       const runs = Number(score.runs) || 0
       const ballsFaced = Number(score.balls_faced) || 0
       const wickets = Number(score.wickets) || 0
       const runsGiven = Number(score.runs_given) || 0
-
+      const overs = Number(score.overs_bowled) || 0
+      oversBowled += overs
+      
       const hasBatted = ballsFaced > 0 || runs > 0
       if (hasBatted) {
         batInnings += 1
@@ -53,10 +57,13 @@ const page = () => {
 
       if (wickets >= 3) {
         threeWi += 1
+      } 
+      if (wickets >= 5) {
+         fiveWi += 1
       }
     }
 
-    return { batInnings, bowlInnings, bf, fours, sixes, nos, threeWi }
+    return { batInnings, bowlInnings, bf, fours, sixes, nos, oversBowled, totalRunsGiven, threeWi, fiveWi }
   }, [scores])
 
   useEffect(() => {
@@ -122,7 +129,10 @@ const page = () => {
               sixes={computedFromScores.sixes}
               nos={computedFromScores.nos}
               bowlInnings={computedFromScores.bowlInnings}
+              oversBowled={computedFromScores.oversBowled}
+              runsGiven={computedFromScores.totalRunsGiven}
               threeWi={computedFromScores.threeWi}
+              fiveWi={computedFromScores.fiveWi}
               bbm={player.computed_stats?.best_figures ?? ''}
               games={player.computed_stats?.games_played ?? 0}
             />
@@ -133,7 +143,7 @@ const page = () => {
                   matchLabel: score.match_label,
                   batting: score.balls_faced > 0 ? `${score.runs} (${score.balls_faced})` : 'DNB',
                   bowling: score.wickets > 0 || score.runs_given > 0 
-                    ? `${score.wickets}/${score.runs_given}` : 'DNB',
+                    ? `${score.wickets}/${score.runs_given} (${score.overs_bowled})` : 'DNB',
                   onEdit: () => router.push(`/player/${playerId}/add-score/${score.id}/edit`)
                 }))
               }

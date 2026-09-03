@@ -72,7 +72,7 @@ const Page = () => {
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
       />
-      <div className="grid grid-cols-2 lg:grid-cols-3 mt-6 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 mt-6 gap-4">
         {
           filteredPlayers.map(({ id, name, role, computed_stats }) => (
             <PlayerCardWrapper
