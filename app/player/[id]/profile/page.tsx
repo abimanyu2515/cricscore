@@ -23,8 +23,10 @@ const page = () => {
     let bf = 0
     let fours = 0
     let sixes = 0
+    let fifties = 0
+    let hundreds = 0
     let nos = 0
-    let totalRunsGiven = 0
+    let maidens = 0
     let totalWickets = 0
     let threeWi = 0
     let fiveWi = 0
@@ -34,7 +36,6 @@ const page = () => {
       const runs = Number(score.runs) || 0
       const ballsFaced = Number(score.balls_faced) || 0
       const wickets = Number(score.wickets) || 0
-      const runsGiven = Number(score.runs_given) || 0
       const overs = Number(score.overs_bowled) || 0
       oversBowled += overs
       
@@ -42,9 +43,14 @@ const page = () => {
       if (hasBatted) {
         batInnings += 1
         if (score.not_out) nos += 1
+        if (runs >= 100) { 
+          hundreds += 1
+        } else if (runs >= 50) {
+          fifties += 1
+        }
       }
 
-      const hasBowled = score.overs_bowled > 0 || runsGiven > 0
+      const hasBowled = score.overs_bowled > 0
       if (hasBowled) {
         bowlInnings += 1
       }
@@ -53,7 +59,7 @@ const page = () => {
       fours += Number(score.fours) || 0
       sixes += Number(score.sixes) || 0
       totalWickets += wickets
-      totalRunsGiven += runsGiven
+      maidens += Number(score.maidens) || 0
 
       if (wickets >= 3) {
         threeWi += 1
@@ -63,7 +69,7 @@ const page = () => {
       }
     }
 
-    return { batInnings, bowlInnings, bf, fours, sixes, nos, oversBowled, totalRunsGiven, threeWi, fiveWi }
+    return { batInnings, bowlInnings, bf, fours, sixes, nos, oversBowled, maidens, threeWi, fiveWi, fifties, hundreds }
   }, [scores])
 
   useEffect(() => {
@@ -124,13 +130,13 @@ const page = () => {
               wkts={player.computed_stats?.total_wickets ?? 0}
               eco={player.computed_stats?.economy ?? 0}
               innings={computedFromScores.batInnings}
-              bf={computedFromScores.bf}
               fours={computedFromScores.fours}
               sixes={computedFromScores.sixes}
-              nos={computedFromScores.nos}
+              fifties={computedFromScores.fifties}
+              hundreds={computedFromScores.hundreds}
               bowlInnings={computedFromScores.bowlInnings}
               oversBowled={computedFromScores.oversBowled}
-              runsGiven={computedFromScores.totalRunsGiven}
+              maidens={computedFromScores.maidens}
               threeWi={computedFromScores.threeWi}
               fiveWi={computedFromScores.fiveWi}
               bbm={player.computed_stats?.best_figures ?? ''}

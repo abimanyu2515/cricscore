@@ -7,8 +7,11 @@ export interface derivedStatsProps {
     bowlInnings: number
     oversBowled: number
     runsGiven: number
+    maidens: number
     threeWi: number
     fiveWi: number
+    fifties: number
+    hundreds: number
 }
 
 export interface leaderboardPlayerProps {

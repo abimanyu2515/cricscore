@@ -14,13 +14,13 @@ const StatInputCard = ({ title, accentColor, fields }: statInputCardProps) => {
       </div>
 
       <div className="border border-zinc-800 rounded-lg bg-zinc-900 p-3">
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {fields.map(({ label, value, onChange, type, options }) => (
             <div
               key={label}
               className="flex flex-col gap-1 p-3"
             >
-              <label className="font-mono text-xs text-zinc-500 uppercase tracking-widest">
+              <label className="font-mono text-xs text-zinc-400 uppercase tracking-widest">
                 {label}
               </label>
 

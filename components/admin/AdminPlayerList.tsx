@@ -15,7 +15,7 @@ interface AdminPlayerListProps {
 
 const AdminPlayerList = ({ players }: AdminPlayerListProps) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {players?.sort((a, b) => a.playerName.localeCompare(b.playerName)).map(({ id, playerName, role, batting_hand, bowling_hand, bowling_style, onUpdate, onDelete }) => (
             <AdminPlayerItem 
                 key={id}

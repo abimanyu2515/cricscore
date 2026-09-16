@@ -1,3 +1,4 @@
+import { invalidatePlayerRosterCache } from "@/lib/playerRoster";
 import { supabase, supabaseAdmin } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
@@ -107,6 +108,8 @@ export async function PATCH(
         return NextResponse.json({ error: patchRes.error.message }, { status: 500 })
     }
 
+    invalidatePlayerRosterCache()
+
     return NextResponse.json(patchRes.data)
 }
 
@@ -124,6 +127,8 @@ export async function DELETE(
     if (error) { 
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
+    
+    invalidatePlayerRosterCache()
 
     return NextResponse.json({ success: true })
 }

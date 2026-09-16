@@ -21,7 +21,7 @@ const shareTechMono = Share_Tech_Mono({
 
 export const metadata: Metadata = {
   title: "CricScore",
-  description: "A scores recording app for the 'VLCY SHARKS'",
+  description: "A scores recording app for the 'THUNDERBOLTS' cricket team.",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",

@@ -1,6 +1,6 @@
 # CricScore
 
-CricScore is a mobile-first Next.js cricket score tracker for managing players, recording per-match batting/bowling entries, and viewing live leaderboard rankings. Built for the **VLCY SHARKS** team.
+CricScore is a mobile-first Next.js cricket score tracker for managing players, recording per-match batting/bowling entries, and viewing live leaderboard rankings. Built for the **THUNDERBOLTS** team.
 
 ## Tech Stack
 

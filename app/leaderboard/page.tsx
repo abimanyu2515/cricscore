@@ -42,6 +42,8 @@ const battingColumns: leaderBoardTableColumnProps[] = [
   { label: '4s' },
   { label: '6s' },
   { label: 'HS' },
+  { label: '50s' },
+  { label: '100s' },
   { label: 'NOs' },
 ]
 
@@ -51,6 +53,7 @@ const bowlingColumns: leaderBoardTableColumnProps[] = [
   { label: 'WKTS' },
   { label: 'Overs' },
   { label: 'ECO' },
+  { label: 'Maidens' },
   { label: 'Runs Given' },
   { label: '3WI' },
   { label: '5WI' },
@@ -113,6 +116,8 @@ const Page = () => {
         player.derived_stats?.fours ?? 0,
         player.derived_stats?.sixes ?? 0,
         player.computed_stats?.highest_score ?? 0,
+        player.derived_stats?.fifties ?? 0,
+        player.derived_stats?.hundreds ?? 0,
         player.derived_stats?.notOuts ?? 0,
       ],
     }))
@@ -153,6 +158,7 @@ const Page = () => {
         player.computed_stats?.total_wickets ?? 0,
         (player.derived_stats?.oversBowled ?? 0).toFixed(1),
         player.computed_stats?.economy ?? '-',
+        player.derived_stats?.maidens ?? 0,
         player.derived_stats?.runsGiven ?? 0,
         player.derived_stats?.threeWi ?? 0,
         player.derived_stats?.fiveWi ?? 0,
