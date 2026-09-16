@@ -47,24 +47,23 @@ const Sidebar = () => {
           strokeLinecap="round"
           className="text-cyan-400"
         >
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
+          <line x1="3" y1="8" x2="21" y2="8" />
+          <line x1="3" y1="16" x2="21" y2="16" />
         </svg>
       </button>
 
-      {/* Overlay */}
+      {/* Overlay - mobile/tablet only (hidden on desktop via TopNav wrapper, but also ensure lg:hidden) */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setOpen(false)}
           aria-hidden="true"
         />
       )}
 
-      {/* Drawer */}
+      {/* Drawer - mobile/tablet drawer, hidden on desktop */}
       <div
-        className={`fixed top-0 right-0 h-full w-full lg:w-150 bg-[#0d1420] border-l border-[#1a3040] z-50 transform transition-transform duration-300 ease-in-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 h-full w-full lg:w-150 bg-[#0d1420] border-l border-[#1a3040] z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${open ? 'translate-x-0' : 'translate-x-full'}`}
         role="dialog"
         aria-modal="true"
         aria-hidden={!open}
@@ -94,19 +93,21 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {/* Menus */}
+        {/* Menus - mobile/tablet sidebar */}
         <nav className="flex flex-col p-5 gap-4">
           <button
             onClick={() => handleNavigate('/leaderboard')}
-            className="flex items-center gap-3 text-white text-md font-mono hover:text-[#b9e03c] transition-colors cursor-pointer text-left"
+            className="group relative flex items-center gap-3 text-white text-md font-mono hover:text-[#b9e03c] transition-colors cursor-pointer text-left w-fit"
           >
             OVERALL STATS
+            <span className="pointer-events-none absolute left-0 -bottom-1 h-[2px] w-0 bg-[#b9e03c] transition-all duration-300 ease-out group-hover:w-full" />
           </button>
           <button
             onClick={() => handleNavigate('/admin')}
-            className="flex items-center gap-3 text-white text-md font-mono hover:text-[#b9e03c] transition-colors cursor-pointer text-left"
+            className="group relative flex items-center gap-3 text-white text-md font-mono hover:text-[#b9e03c] transition-colors cursor-pointer text-left w-fit"
           >
             MANAGE PLAYERS
+            <span className="pointer-events-none absolute left-0 -bottom-1 h-[2px] w-0 bg-[#b9e03c] transition-all duration-300 ease-out group-hover:w-full" />
           </button>
         </nav>
       </div>

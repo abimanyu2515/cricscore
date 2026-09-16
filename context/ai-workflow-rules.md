@@ -15,7 +15,7 @@ Build this project incrementally using a spec-driven workflow. Context files def
 Split an implementation step if it combines:
 
 - UI changes and background task changes
-- Real-time canvas state and database persistence
+- Real-time state and database persistence
 - Multiple unrelated API routes
 - Behavior that is not clearly defined in the context files
 

@@ -5,6 +5,29 @@
   --font-sans: var(--font-rajdhani);
 }
 
+@theme {
+  --animate-swap-yellow-blue: swapYellowToBlue 4s ease-in-out infinite;
+  --animate-swap-blue-yellow: swapBlueToYellow 4s ease-in-out infinite;
+
+  @keyframes swapYellowToBlue {
+    0%, 100% {
+      color: #b9e03c; /* Pale yellow (yellow-200) */
+    }
+    50% {
+      color: #71717A;
+    }
+  }
+
+  @keyframes swapBlueToYellow {
+    0%, 100% {
+      color: #71717A;
+    }
+    50% {
+      color: #b9e03c; /* Pale yellow (yellow-200) */
+    }
+  }
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   20% { transform: translateX(-8px); }
