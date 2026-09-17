@@ -27,6 +27,55 @@ CricScore is a mobile-first Next.js cricket score tracker for managing players, 
 - Single-tap to add score / long-press to view profile (`app/hooks/useLongPress.ts` with scroll/move guards)
 - Overlay Sidebar (`components/ui/Sidebar.tsx`) triggered from `TopNav` — menus: Overall Stats (`/leaderboard`), Manage Players (`/admin`)
 
+## AI Assistant
+
+LYST — natural-language cricket stats assistant on `/` (floating `ASK LYST` button in `components/ui/TopNav.tsx:5` → `components/assistant/AssistantChat.tsx:1`) powered by Gemini function calling. Answers questions about player performance, comparisons, and statistics conversationally without exposing tool internals.
+
+- **Route:** `POST /api/assistant` (`app/api/assistant/route.ts:15`) — accepts `{message, history}` (history capped to last 10, message max 2000 chars), builds `Content[]` stateless and delegates to `runAssistantTurn` (`lib/assistant/assistantOrchestrator.ts:45`). Gated behind `cricscore_access` cookie in `proxy.ts`.
+- **Orchestrator:** `runAssistantTurn` loops `generateContent` until no `functionCall` parts remain, handling parallel calls in one turn and pushing `candidate.content` as-is to preserve `thoughtSignature` (`lib/assistant/assistantOrchestrator.ts:104`).
+
+### Tool tiers
+
+All declarations in `lib/assistant/assistantTools.ts:61` (dispatcher `executeToolCall` at `lib/assistant/assistantTools.ts:27` delegates to `lib/assistant/tools.ts`); system prompt routing rules in `lib/assistant/assistantSystemPrompt.ts:10`.
+
+- **Tier 1 — fixed, fast lookups (precomputed data):**
+  - `get_player_stats` — single player `computed_stats` + derived aggregates
+  - `get_leaderboard` — ranked batting/bowling slice (batting `total_runs → batting_avg → strike_rate → batInnings ASC`; bowling `total_wickets → economy ASC → bowling_avg ASC → best_figures`)
+  - `compare_players` — side-by-side 2-5 players
+- **Tier 2 — flexible filtered queries (when Tier 1 shape doesn't fit):**
+  - `query_team_data` — allowlisted tables `players/score_entries/computed_stats`, allowlisted columns/operators (`eq/neq/gt/gte/lt/lte/like/ilike/in`), parameterized Supabase builder, hard cap 200 rows (`lib/assistant/tools.ts:266`)
+- **Tier 3 — derived/computed (deterministic in `lib/`, never by the model):**
+  - `getPlayerVsOpponentStats` — `match_label ilike opponent` aggregates
+  - `simulateStatChange` — hypothetical next-innings projection (not-out ≠ dismissal, maiden = 0 runs, `oversToBalls` conversion)
+  - `getInningsToReachCumulativeThreshold` — sequential scan by `match_date ASC` to cumulative threshold
+  - `getInningsToNthMilestoneOccurrence` — innings for one player's Nth occurrence of `runs >= threshold` (requires `player_id`, single-player only)
+  - `getFirstToReachMilestone` — earliest `match_date` where `runs|wickets >= threshold` across all players, with tie detection
+  - `getPlayerFormOverLastN` — windowed last N innings (`type: batting|bowling`), warns if fewer than N available
+
+### Model configuration
+
+- **Models:** dual-model routing via `lib/assistant/modelQueue.ts:10` — `gemini-3.1-flash-lite` and `gemini-3.5-flash-lite` (two independent per-model queues). `pickLeastLoadedModel()` (`lib/assistant/modelQueue.ts:65`) picks the least-loaded model once per conversation; `enqueueModelCall` (`lib/assistant/modelQueue.ts:77`) enqueues on that model's queue. Roughly doubles effective throughput within free-tier limits.
+- **Temperature:** `0` (`lib/assistant/assistantOrchestrator.ts:77`) for deterministic tool-selection behavior.
+- **Client:** `lib/assistant/gemini.ts:1` (`GoogleGenAI`, `GEMINI_API_KEY` from env, mirrors `lib/supabase.ts` pattern).
+
+### Reliability safeguards
+
+- **Rate-limit handling:** per-model queue spacing `MIN_GAP_MS=4200` (~14 RPM safety margin under 15 RPM ceiling) + exponential backoff on 429/503 (`MAX_RETRIES=3`, `BASE_DELAY_MS=2000` doubling) in `lib/assistant/modelQueue.ts:13` and `lib/assistant/geminiRetry.ts:9` (legacy single-queue reference). Route maps quota/rate-limit → `429` and high-demand/overload → `503` with friendly messages (`app/api/assistant/route.ts:51`).
+- **Duplicate tool-call detection:** `lib/duplicateCallDetect.ts:31` — `createToolCallTracker` + `handleFunctionCallsForRound` canonicalize args (sorted keys) to short-circuit identical calls within a turn with a `note` result instead of re-executing.
+- **Round cap:** `MAX_TOOL_ROUNDS=4` (`lib/assistant/assistantOrchestrator.ts:9`). If the model still requests tool calls on the final round the loop throws `MAX_TOOL_ROUNDS exceeded` (route surfaces `500`); progress-tracker notes a forced-final-round fallback (`FunctionCallingConfigMode.NONE`) as defense-in-depth but the current code throws rather than forcing a text-only final turn.
+- **Player name resolution:** cached roster injected into context — `getPlayerRoster()` (`lib/playerRoster.ts:16`, `CACHE_TTL_MS=5*60*1000`, stale-cache fallback, `invalidatePlayerRosterCache` on mutations) listed in `systemInstructionWithRoster` (`lib/assistant/assistantOrchestrator.ts:54`); model must resolve names from roster, never call `query_team_data` on `players` to look up an id, and never print ids.
+- **Ambiguity & ties:** ambiguous player names (multiple matches or no clear match) — assistant asks the user to clarify before calling tools (`lib/assistant/assistantOrchestrator.ts:62` + system prompt). Tied `getFirstToReachMilestone` (`tied: true`, `players[]` at same `match_date`) — reported explicitly as a tie, not guessed (`lib/assistant/tools.ts:729`, system prompt `lib/assistant/assistantSystemPrompt.ts:58`).
+
+### Known limitation
+
+The assistant cannot determine order of events **within** a single match (e.g., which of two players who reached a milestone in the same match did so first) — only final match totals per player are recorded (`score_entries.match_date` + aggregates), no in-match sequence data. `getFirstToReachMilestone` returns `tied: true` with all players at the earliest `matchDate` in this case, and the assistant reports it as a tie rather than guessing.
+
+### Testing the assistant under load
+
+- **Script:** `scripts/load-test-assistant.mjs:1` — fires `CONCURRENCY` (default 10) concurrent `POST /api/assistant` requests spanning Tier 1/2/3 queries; authenticates once via `POST /api/auth/verify-access` and reuses the `cricscore_access` cookie.
+- **Run:** `node scripts/load-test-assistant.mjs` (or `BASE_URL=https://your-app.vercel.app CONCURRENCY=10 node scripts/load-test-assistant.mjs`); auto-loads `ACCESS_PIN` from `.env.local`.
+- **Checks:** concurrent request handling, rate-limit (`429`) vs success breakdown, average/slowest response time, and that no `MAX_TOOL_ROUNDS` or redirect-to-`/access` regressions occur.
+
 ## Access Control
 
 Enforced by `proxy.ts:3` (site-wide) plus the admin dialog on `/admin`:
@@ -140,6 +189,7 @@ Validation lives in `app/api/players/[id]/scores/route.ts` and `app/api/players/
 | `/api/players/[id]` | `GET`, `PATCH`, `DELETE` | Read/update/delete player (style fields with migration fallback) |
 | `/api/players/[id]/scores` | `GET`, `POST` | List/create score entries |
 | `/api/players/[id]/scores/[entryId]` | `GET`, `PATCH`, `DELETE` | Read/update/delete single entry (includes delete-score flow + toast) |
+| `/api/assistant` | `POST` | AI assistant chat — `{message, history}` → `runAssistantTurn` → Gemini tool loop → `{text}` or `{error, detail}` (`429/503/500`) |
 
 All handlers use `supabase` (anon) for reads and `supabaseAdmin` (service role) for writes, with input validation at the boundary.
 
@@ -148,19 +198,20 @@ All handlers use `supabase` (anon) for reads and `supabaseAdmin` (service role) 
 ```
 cricscore/
 ├── proxy.ts                          # site-wide cookie gate (matcher excludes _next/static, etc.)
-├── next.config.js
+├── next.config.js / tsconfig.json / postcss.config.mjs
 ├── app/
-│   ├── layout.tsx                    # fonts (Geist/Rajdhani/Share_Tech_Mono), Toaster, Analytics, SW registration, manifest
-│   ├── page.tsx                      # home: fetch /api/players, FilterRow, PlayerCardWrapper grid
-│   ├── access/page.tsx               # 5-digit PIN form
-│   ├── admin-access/page.tsx         # 4-digit PIN form
+│   ├── layout.tsx / globals.css      # fonts (Geist/Rajdhani/Share_Tech_Mono), Toaster, Analytics, SW registration
+│   ├── page.tsx                      # home: fetch /api/players, FilterRow, PlayerCardWrapper grid, ASK LYST
+│   ├── access/page.tsx               # 5-digit PIN gate
+│   ├── admin-access/page.tsx         # 4-digit PIN gate
 │   ├── admin/page.tsx                # admin panel (AdminPinDialog + ManagePlayers)
 │   ├── leaderboard/page.tsx          # Overall Stats: tabs + LeaderBoardTable (sorting)
-│   ├── player/[id]/profile/page.tsx # fetch player + entries, ProfileHeader/StatsGrid/MatchHistory
+│   ├── player/[id]/profile/page.tsx # ProfileHeader/StatsGrid/MatchHistory
 │   ├── player/[id]/add-score/page.tsx
 │   ├── player/[id]/add-score/[entryId]/edit/page.tsx
 │   ├── hooks/useLongPress.ts
 │   └── api/
+│       ├── assistant/route.ts        # LYST chat — {message,history} → runAssistantTurn
 │       ├── auth/verify-access/route.ts
 │       ├── auth/verify-admin/route.ts
 │       └── players/
@@ -170,16 +221,28 @@ cricscore/
 │               ├── route.ts
 │               └── [entryId]/route.ts
 ├── components/
-│   ├── ui/  
-│   ├── admin/ 
-│   ├── leaderboard/ 
-│   ├── profile/ 
-│   └── addScore/ 
-├── lib/  supabase.ts, constants.ts, playerStyles.ts, utils.ts
-├── types/ leaderboardProps.ts, playerCardProps.ts, profileHeaderProps.ts, statsGridProps.ts
+│   ├── assistant/ AssistantChat.tsx, AssistantMessage.tsx
+│   ├── ui/  AddPlayerCard.tsx, AddPlayerDialog.tsx, AdminPinDialog.tsx, ConfirmDeleteDialog.tsx, FilterRow.tsx, PlayerCard.tsx, PlayerCardWrapper.tsx, Sidebar.tsx, TopNav.tsx, StarBorder.tsx
+│   ├── admin/  AdminHeader.tsx, AdminPlayerItem.tsx, AdminPlayerList.tsx, ManagePlayers.tsx
+│   ├── leaderboard/ LeaderBoardHeader.tsx, LeaderBoardTable.tsx, LeaderBoardTabs.tsx
+│   ├── profile/ MatchHistory.tsx, MatchHistoryFilterDialog.tsx, MatchHistoryItem.tsx, ProfileHeader.tsx, StatsGrid.tsx
+│   └── addScore/ DateMatchRow.tsx, ScoreAction.tsx, ScoreHeader.tsx, StatInputCard.tsx
+├── lib/
+│   ├── supabase.ts / constants.ts / playerStyles.ts / utils.ts
+│   ├── playerRoster.ts               # cached roster (CACHE_TTL_MS 5min)
+│   ├── duplicateCallDetect.ts        # canonical duplicate tool-call detection
+│   └── assistant/
+│       ├── assistantOrchestrator.ts  # runAssistantTurn, MAX_TOOL_ROUNDS=4, temperature 0
+│       ├── assistantTools.ts         # executeToolCall + functionDeclarations (10 tools)
+│       ├── assistantSystemPrompt.ts  # ASSISTANT_SYSTEM_INSTRUCTION
+│       ├── tools.ts                  # Tier1/2/3 implementations (allowlisted query, derived calcs)
+│       ├── modelQueue.ts             # dual-model routing + rate-limit queue (gemini-3.1/3.5-flash-lite)
+│       ├── gemini.ts                 # GoogleGenAI client
+│       └── geminiRetry.ts            # legacy single-queue backoff helper
+├── types/ leaderboardProps.ts, playerCardProps.ts, profileHeaderProps.ts, statsGridProps.ts, dateMatchRowProps.ts, matchHistoryItemProps.ts, scoreHeaderProps.ts, statInputCardProps.ts
 ├── db/schema.sql
-├── context/ project-overview.md, architecture-context.md, code-standards.md,
-│            ai-workflow-rules.md, progress-tracker.md, feature-specs/
+├── scripts/load-test-assistant.mjs   # concurrent load tester for /api/assistant
+├── context/ project-overview.md, architecture-context.md, code-standards.md, ai-workflow-rules.md, progress-tracker.md, feature-specs/
 └── public/ logo.png, manifest.json, sw.js
 ```
 
@@ -195,6 +258,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ACCESS_PIN=5_digit_site_pin
 ADMIN_PIN=4_digit_admin_pin
+GEMINI_API_KEY=your_gemini_api_key   # required for AI Assistant (LYST) — Gemini function calling
 ```
 
 Never commit `.env.local`; see Boundaries below.
