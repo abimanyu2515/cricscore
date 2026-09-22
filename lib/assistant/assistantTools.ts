@@ -21,6 +21,8 @@ import type {
   GetFirstToReachMilestoneArgs,
   GetPlayerFormOverLastNArgs,
 } from "@/lib/assistant/tools";
+import { get_team_record, query_matches } from "@/lib/matchesQueryTool";
+import type { GetTeamRecordArgs, QueryMatchesArgs } from "@/lib/matchesQueryTool";
 
 // ── dispatcher ──
 
@@ -47,6 +49,10 @@ export async function executeToolCall(name: string, args: unknown): Promise<unkn
       return getFirstToReachMilestone(record as unknown as GetFirstToReachMilestoneArgs);
     case "getPlayerFormOverLastN":
       return getPlayerFormOverLastN(record as unknown as GetPlayerFormOverLastNArgs);
+    case "get_team_record":
+      return get_team_record(record as unknown as GetTeamRecordArgs);
+    case "query_matches":
+      return query_matches(record as unknown as QueryMatchesArgs);
     default:
       console.error(
         "Temporary system error retrieving data — this is not a problem with your query. Do not retry with different arguments; instead inform the user the data is temporarily unavailable."
@@ -229,6 +235,53 @@ export const functionDeclarations: FunctionDeclaration[] = [
         type: { type: Type.STRING },
       },
       required: ["player_id", "n", "type"],
+    },
+  },
+  {
+    name: "get_team_record",
+    description:
+      "Returns THUNDERBOLTS overall win/loss/tie record as a grouped aggregate (count(*) GROUP BY match_result) from the standalone `matches` table. Takes no required params; optional match_type filters to a single competition type (e.g. 'ODI', 'T20'). Use ONLY when the user asks for the overall win/loss/tie record with NO other filters — no date range, no opponent/team_2, no location, no specific result filter. If the question specifies ANY filter beyond an optional match_type (date range, opponent, location, or match_result), do NOT use this tool — use query_matches instead. This tool is scoped to the matches table only and has no join to player-stats tables.",
+    parameters: {
+      type: Type.OBJECT,
+      properties: {
+        match_type: { type: Type.STRING, description: "Optional filter: competition type e.g. 'ODI', 'T20', 'Test'" },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "query_matches",
+    description:
+      "Filtered read-only query over the standalone `matches` table (team_1 is always THUNDERBOLTS; team_2 is opponent free text). Allowlisted filter columns ONLY: match_date (use gt/gte/lt/lte for date ranges), team_2 (opponent, use ilike), match_type, location, match_result (boolean true=won, false=lost, null=tie/no result). Use when the user specifies ANY filter — opponent, date range, match type, location, or result (e.g. 'matches vs X', 'games in June 2024', 'away losses', 'T20 wins'). Do NOT use for the unfiltered overall win/loss/tie record — use get_team_record instead. Isolated from player-stats tables (players/score_entries/computed_stats); cannot join to player performance and must not attempt loose match_date correlation.",
+    parameters: {
+      type: Type.OBJECT,
+      properties: {
+        select: { type: Type.STRING, description: "Comma-separated allowlisted columns or * (defaults to match_date, team_2, match_type, location, match_result). Allowed: match_date, team_2, match_type, location, match_result" },
+        filters: {
+          type: Type.ARRAY,
+          description: "Optional filters over allowlisted columns only",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              column: { type: Type.STRING, description: "Allowlisted column: match_date, team_2, match_type, location, match_result" },
+              op: { type: Type.STRING, description: "Operator: eq, neq, gt, gte, lt, lte, like, ilike, in" },
+              value: { type: Type.STRING, description: "Filter value (boolean match_result uses 'true'/'false')" },
+            },
+            required: ["column", "op", "value"],
+          },
+        },
+        orderBy: {
+          type: Type.OBJECT,
+          description: "Optional ordering over allowlisted columns",
+          properties: {
+            column: { type: Type.STRING },
+            ascending: { type: Type.BOOLEAN },
+          },
+          required: ["column"],
+        },
+        limit: { type: Type.NUMBER, description: "Row limit 1-200, default 50" },
+      },
+      required: [],
     },
   },
 ];
