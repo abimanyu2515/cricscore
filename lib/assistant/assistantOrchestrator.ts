@@ -84,11 +84,6 @@ export async function runAssistantTurn(initialContents: Content[]): Promise<stri
 
     const functionCalls = extractFunctionCalls(parts);
 
-    console.log(`[round ${round}]`, functionCalls.map(fc => ({
-      name: fc.functionCall.name,
-      args: fc.functionCall.args,
-    })));
-
     // No tool calls — return natural language answer
     if (functionCalls.length === 0) {
       const responseText = response.text ?? extractText(parts);

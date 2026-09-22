@@ -20,6 +20,9 @@
 
 - **Database**: metadata, relationships, scores and stats.
 - Players name, role and scores with corresponding matches and computed overall stats in PostgreSQL.
+- `matches` table stores team-level fixture/result data (`team_1`, `team_2`, scores, overs, result, location, date, type) for the `/matches` page. It is **standalone** — no foreign key relationship to `score_entries` or `computed_stats`. `team_2` is free text, not a reference to `players` or any team-registry table.
+- Deliberate tradeoff: a `match_id` FK on `score_entries` was considered (to guarantee two players' entries refer to the exact same match) but rejected — as opponent teams grow, a dropdown/select sourced from a `teams` or `matches` table becomes unscrollable/unusable in the add-score flow. Free-typed `match_label` + `match_date` on `score_entries` remains the only match identifier at the player-score level.
+- Consequence: there is no reliable programmatic join between a `matches` row and the `score_entries` rows for that same match — only a loose match_date correlation. If a "who played in this match" feature is ever needed, it will require a separate design pass (not solved by this decision).
 
 ## Auth and Collaboration Model
 

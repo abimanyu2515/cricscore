@@ -58,7 +58,7 @@ const LeaderBoardTable = ({ type, columns, rows }: LeaderBoardTableProps) => {
                                             className={`px-3 py-3 text-center text-sm whitespace-nowrap ${
                                                 isFirst
                                                     ? `${rank1Value} font-bold`
-                                                    : accentText
+                                                    : `bg-black ${accentText}`
                                             }`}
                                         >
                                             {value}

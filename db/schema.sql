@@ -84,3 +84,23 @@ create table public.computed_stats (
   constraint computed_stats_player_id_key unique (player_id),
   constraint computed_stats_player_id_fkey foreign KEY (player_id) references players (id) on delete CASCADE
 ) TABLESPACE pg_default;
+
+-- matches table schema
+
+create table public.matches (
+  id uuid not null default gen_random_uuid (),
+  match_date date not null,
+  match_type text not null,
+  location text not null,
+  team_1 text not null,
+  team_2 text not null,
+  score_1 integer null default 0,
+  overs_played_1 numeric(4, 1) null default 0,
+  score_2 integer null default 0,
+  overs_played_2 numeric(4, 1) null default 0,
+  match_result_desc text not null,
+  match_result boolean null,
+  created_at timestamp without time zone null default now(),
+  updated_at timestamp without time zone null default now(),
+  constraint matches_pkey primary key (id)
+) TABLESPACE pg_default;
