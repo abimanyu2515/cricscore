@@ -56,7 +56,7 @@ const MatchResultCard = ({ match }: MatchResultCardProps) => {
   const desc = match.match_result_desc
 
   return ( 
-    <div className="rounded-2xl border border-zinc-400 bg-zinc-900/40 flex flex-col gap-2">
+    <div className="rounded-md border border-zinc-400 bg-zinc-900/40 flex flex-col gap-2">
       <span className="font-mono bg-transparent border-b border-zinc-400 p-3 text-xs font-semibold text-[#b9e03c] tracking-widest uppercase">{desc}</span>
 
       <div className="flex flex-col gap-1 mt-1 px-3">

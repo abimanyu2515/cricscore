@@ -78,7 +78,7 @@ const Page = () => {
   return (
     <>
       <div className="flex items-center justify-between">
-        <button onClick={() => router.push('/')} className="flex items-center font-mono text-xs text-slate-400">
+        <button onClick={() => router.push('/')} className="flex items-center font-mono text-xs text-slate-400 hover:cursor-pointer">
           <ChevronLeft width={14} height={14} />
           BACK
         </button>
