@@ -6,7 +6,7 @@ const ProfileHeader = ({name, role, batting_hand, bowling_hand, bowling_style, o
   const styleLabel = formatPlayerStyle({ batting_hand, bowling_hand, bowling_style, role })
   return (
     <div>
-        <button onClick={onBack} className="flex items-center font-mono text-xs text-slate-400">
+        <button onClick={onBack} className="flex items-center font-mono text-xs text-slate-400 hover:cursor-pointer">
             <ChevronLeft width={14} height={14}/>
             BACK
         </button>
