@@ -60,7 +60,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="CricScore" />
       </head>
-      <body className="min-h-full flex flex-col font-sans p-5 bg-[#0d1420] text-white">
+      <body className="min-h-full flex flex-col font-sans p-0 bg-[#0d1420] text-white">
         {children}
         <Toaster 
           richColors 

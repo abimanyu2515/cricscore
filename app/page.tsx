@@ -48,7 +48,7 @@ const Page = () => {
   )
 
   return (
-    <div>
+    <div className="p-5">
       <TopNav />
       <AdminPinDialog
         isOpen={showAdminDialog}

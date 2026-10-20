@@ -23,6 +23,11 @@ const Sidebar = () => {
       ariaLabel: 'Manage or create new players',
       link: '/admin',
     },
+    {
+      label: 'How to Use',
+      ariaLabel: 'How to use CricScore',
+      link: '/how-to-use',
+    },
   ]
 
   return (
