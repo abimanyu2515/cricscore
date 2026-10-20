@@ -54,21 +54,22 @@ const MatchResultCard = ({ match }: MatchResultCardProps) => {
   const matchDate = formatMatchDate(match.match_date)
   const matchType = match.match_type
   const desc = match.match_result_desc
+  const result = match.match_result
 
   return ( 
     <div className="rounded-md border border-zinc-400 bg-zinc-900/40 flex flex-col gap-2">
       <span className="font-mono bg-transparent border-b border-zinc-400 p-3 text-xs font-semibold text-[#b9e03c] tracking-widest uppercase">{desc}</span>
 
       <div className="flex flex-col gap-1 mt-1 px-3">
-        <div>
-          <p className="font-sans font-bold text-white text-lg uppercase">{team1}</p>
-          <p className="font-mono font-bold text-md mt-1 text-white">
+        <div className={`${result === true ? 'text-white' : 'text-zinc-400'}`}>
+          <p className="font-sans font-bold text-lg uppercase">{team1}</p>
+          <p className="font-mono font-bold text-md mt-1">
             {score1} <span className="font-light text-slate-400">({overs1})</span>
           </p>
         </div>
-        <div className="mt-2.5">
-          <p className="font-sans font-bold text-white text-lg uppercase">{team2}</p>
-          <p className="font-mono font-bold text-md mt-1 text-white">
+        <div className={`mt-2.5 ${result === true ? 'text-zinc-400' : 'text-white'}`}>
+          <p className="font-sans font-bold text-lg uppercase">{team2}</p>
+          <p className="font-mono font-bold text-md mt-1">
             {score2} <span className="font-light text-slate-400">({overs2})</span>
           </p>
         </div>

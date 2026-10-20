@@ -76,7 +76,7 @@ const Page = () => {
   )
 
   return (
-    <div>
+    <div className="p-5">
         <AdminHeader onExit={() => router.push('/')} />
         <AddPlayerDialog
           isOpen={showAddPlayer}

@@ -171,7 +171,7 @@ const Page = () => {
   )
 
   return (
-    <div>
+    <div className="p-5">
       <LeaderBoardHeader onBack={() => router.push('/')} />
       <LeaderBoardTabs
         activeTab={activeTab}

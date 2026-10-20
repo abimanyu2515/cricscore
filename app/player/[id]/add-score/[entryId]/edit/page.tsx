@@ -147,7 +147,7 @@ const EditPage = () => {
   )
 
   return (
-    <div>
+    <div className="p-5">
       <ScoreHeader playerName={playerName} onBack={() => router.back()} />
       
       <div className="flex items-center gap-3 mt-4 font-mono text-xs">

@@ -114,7 +114,7 @@ const Page = () => {
   }
 
   return (
-    <div>
+    <div className="p-5">
         <ScoreHeader playerName={playerName} onBack={() => redirect.push('/')} />
         <DateMatchRow  
           date={date}

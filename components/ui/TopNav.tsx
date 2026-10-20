@@ -69,13 +69,13 @@ const TopNav = () => {
               MANAGE PLAYERS
               <span className="pointer-events-none absolute left-0 -bottom-1 h-0.5 w-0 bg-[#b9e03c] transition-all duration-300 ease-out group-hover:w-full" />
             </button>
-            {/* <button
+            <button
               onClick={() => router.push('/how-to-use')}
               className="group relative font-mono text-sm tracking-wide text-white transition-colors cursor-pointer py-1"
             >
               HOW TO USE
               <span className="pointer-events-none absolute left-0 -bottom-1 h-0.5 w-0 bg-[#b9e03c] transition-all duration-300 ease-out group-hover:w-full" />
-            </button> */}
+            </button>
           </nav>
 
           <div className="xl:hidden shrink-0">
