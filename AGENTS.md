@@ -84,3 +84,55 @@ cricscore/
 * `src/app/api/players` - Contains backend routes to fetch, edit, create, delete and calculate players data & scores.
 * `src/lib/` - Utility functions, fetch wrappers, and shared constants.
 * `src/types/` - Global TypeScript interfaces and type definitions.
+
+## Stack
+
+- **Language / Runtime**: TypeScript, Node 20
+- **Framework**: Next.js 16 (App Router)
+- **Key dependencies**: @supabase/supabase-js, @google/genai, react, react-dom, tailwindcss, motion, gsap, lucide-react, sonner, clsx, tailwind-merge
+- **Package manager**: npm
+
+## Build approach
+
+<TBD, set by /scope>
+
+## Specs
+
+Stored in `context/feature-specs/`. Format: `context/feature-specs/feature-title.md`.
+
+## Rules
+
+- Keep modules small and single-purpose
+- Fix root causes — do not layer workarounds
+- Do not mix unrelated concerns in one component or route
+- Respect system boundaries defined in `architecture-context.md`
+- Strict TypeScript mode; avoid `any`; use explicit interfaces
+- Default to React Server Components; add `"use client"` only for browser interactivity
+- Mobile-first styling; desktop styles behind `lg:` breakpoint
+- Player names: `font-sans` + `font-bold`; everything else: `font-mono`
+- Zinc backgrounds; cyan for batting; purple for bowling; `#b9e03c` for animated underlines
+- Validate and parse request input before any logic; enforce auth before mutations
+- Project metadata and relationships in PostgreSQL via Supabase; computed stats maintained by triggers
+- Shared infrastructure in `lib/`; UI composition only in `components/`; route handlers in `app/api/`
+
+## Agent skills
+
+- [audit](.agents/skills/audit/): `opencode/opencode`, context bootstrapper for AGENTS.md files
+- [architect](.agents/skills/architect/): `opencode/opencode`, design decisions and build specs
+- [check](.agents/skills/check/): `opencode/opencode`, verify behavior and code review
+- [debug](.agents/skills/debug/): `opencode/opencode`, root cause analysis and fix
+- [develop](.agents/skills/develop/): `opencode/opencode`, feature implementation from approved design
+- [document](.agents/skills/document/): `opencode/opencode`, PR/changelog/release notes
+- [find-skills](.agents/skills/find-skills/): `opencode/opencode`, skill discovery
+- [opencode](.agents/skills/opencode/): `opencode/opencode`, OpenCode usage and configuration
+- [report](.agents/skills/report/): `opencode/opencode`, issue reporting
+- [scope](.agents/skills/scope/): `opencode/opencode`, product scope management
+- [sync](.agents/skills/sync/): `opencode/opencode`, context reconciliation
+- [test](.agents/skills/test/): `opencode/opencode`, test suite generation
+
+## Context files
+
+- [app/api/AGENTS.md](app/api/AGENTS.md): API routes — auth, players, scores, matches, assistant; cookie vs header auth, validation patterns
+- [components/AGENTS.md](components/AGENTS.md): UI by feature — RSC default, mobile-first, styling tokens, Sidebar/TopNav duality
+- [lib/AGENTS.md](lib/AGENTS.md): Shared infra — Supabase singletons, assistant orchestration (dual Gemini, temp 0, thoughtSignature)
+- [db/AGENTS.md](db/AGENTS.md): Schema — 4 tables, triggers, computed stats, standalone matches table, no match_id FK
